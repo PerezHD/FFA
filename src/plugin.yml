@@ -1,0 +1,8 @@
+name: FFA
+version: 3.0
+description: Minecraft pvp freeforall minigame!
+main: com.harry5573.ffa.Main
+commands:
+  ffa: 
+    description: Teleport to FFA
+    aliases: [freeforall]
