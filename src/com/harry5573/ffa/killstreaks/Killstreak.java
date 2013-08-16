@@ -30,11 +30,13 @@ public class Killstreak implements Listener {
 
     String prefix = ChatColor.GOLD + "[FFA]:";
     String prefix2 = ChatColor.YELLOW + "[" + ChatColor.RED + "FFA" + ChatColor.YELLOW + "]";
-    public static Main ms = null;
+    
+    Main plugin;
 
-    public Killstreak(Plugin plugin) {
-        ms = (Main) plugin;
+    public Killstreak(Main instance) {
+        this.plugin = instance;
     }
+
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDeath(PlayerDeathEvent event) {
@@ -107,21 +109,21 @@ public class Killstreak implements Listener {
         boots.setItemMeta(meta5);
 
         Entity e = event.getEntity();
-        if ((e instanceof Player) && (ms.killstreak.containsKey((Player) e))) {
+        if ((e instanceof Player) && (plugin.killstreak.containsKey((Player) e))) {
             Player killed = event.getEntity();
             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "tptoggle " + killed.getName() + " on");
             event.getDrops().removeAll(event.getDrops());
             Player killer = ((Player) e).getKiller();
             if (killer != null) {
-                int x = ((Integer) ms.killstreak.get(killer)).intValue();
+                int x = ((Integer) plugin.killstreak.get(killer)).intValue();
                 event.setDroppedExp(0);
                 event.setDeathMessage("");
                 int newx = x + 1;
-                ms.killstreak.remove(killer);
-                ms.killstreak.put(killer, Integer.valueOf(newx));
+                plugin.killstreak.remove(killer);
+                plugin.killstreak.put(killer, Integer.valueOf(newx));
                 killer.giveExpLevels(1);
                 //Give new potions :)
-                ms.givePotions(killer);
+                plugin.givePotions(killer);
                 if (newx == 1) {
                     killer.getInventory().setItem(0, sworddiamond);
                     killer.getInventory().setItem(1, axediamond);

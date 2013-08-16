@@ -12,17 +12,16 @@ import com.harry5573.ffa.Main;
 
 public class ItemPickup implements Listener {
 
-    String prefix = ChatColor.GOLD + "[FFA]:";
-    public static Main ms = null;
+    Main plugin;
 
-    public ItemPickup(Plugin plugin) {
-        ms = (Main) plugin;
+    public ItemPickup(Main instance) {
+        this.plugin = instance;
     }
 
     @EventHandler
     public void onPickupItem(PlayerPickupItemEvent event) {
         Player p = event.getPlayer();
-        if (ms.killstreak.containsKey(p)) {
+        if (plugin.killstreak.containsKey(p)) {
             event.setCancelled(true);
         }
         p.updateInventory();

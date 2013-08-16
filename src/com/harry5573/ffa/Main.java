@@ -41,16 +41,20 @@ import com.harry5573.ffa.listeners.PlayerMove;
 public class Main extends JavaPlugin implements Listener {
 
     public static Main plugin;
+    
     public HashMap<Player, Integer> timer = new HashMap();
     public static HashMap<String, ItemStack[]> inventoryContents = new HashMap();
     public static HashMap<String, ItemStack[]> inventoryArmorContents = new HashMap();
     public HashMap<String, ItemStack> cursor = new HashMap();
     public HashMap<Player, Integer> killstreak = new HashMap();
     public static HashMap<Player, ArrayList<Block>> inFFA = new HashMap();
-    String prefix = ChatColor.RED + "[" + ChatColor.YELLOW + "TnTFFA" + ChatColor.RED + "]";
+    
+    public String prefix = ChatColor.RED + "[" + ChatColor.YELLOW + "TnTFFA" + ChatColor.RED + "]";
 
     //Start Plugin
+    @Override
     public void onEnable() {
+        plugin = this;
 
         timer.clear();
         inventoryContents.clear();
@@ -69,11 +73,10 @@ public class Main extends JavaPlugin implements Listener {
         getLogger().info("[FFA] Started!");
 
         saveDefaultConfig();
-        
-        plugin = this;
     }
     //Disable Plugin 
 
+    @Override
     public void onDisable() {
         getLogger().info("[FFA] Stopped!");
         saveConfig();

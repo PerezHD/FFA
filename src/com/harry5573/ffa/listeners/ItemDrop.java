@@ -11,19 +11,18 @@ import com.harry5573.ffa.Main;
 
 public class ItemDrop implements Listener {
 
-    String prefix = ChatColor.GOLD + "[FFA]:";
-    public static Main ms = null;
+    Main plugin;
 
-    public ItemDrop(Plugin plugin) {
-        ms = (Main) plugin;
+    public ItemDrop(Main instance) {
+        this.plugin = instance;
     }
 
     @EventHandler
     public void inventoryDrop(PlayerDropItemEvent event) {
         Player p = event.getPlayer();
-        if (ms.killstreak.containsKey(p)) {
+        if (plugin.killstreak.containsKey(p)) {
             event.setCancelled(true);
-            p.sendMessage(prefix + ChatColor.RED + " You are not allowed to drop items in FFA.");
+            p.sendMessage(plugin.prefix + ChatColor.RED + " You are not allowed to drop items in FFA.");
             p.updateInventory();
         }
     }

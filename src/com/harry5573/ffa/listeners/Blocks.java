@@ -10,31 +10,31 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.Plugin;
 
 import com.harry5573.ffa.Main;
+import org.bukkit.event.EventPriority;
 
 public class Blocks implements Listener {
 
-    String prefix = ChatColor.GOLD + "[FFA]:";
-    public static Main ms = null;
+    Main plugin;
 
-    public Blocks(Plugin plugin) {
-        ms = (Main) plugin;
+    public Blocks(Main instance) {
+        this.plugin = instance;
     }
 
-    @EventHandler
+    @EventHandler(priority= EventPriority.LOWEST)
     public void onBreak(BlockBreakEvent e) {
             Player p = e.getPlayer();
-            if (ms.killstreak.containsKey(p)) {
+            if (plugin.killstreak.containsKey(p)) {
                 e.setCancelled(true);
-                p.sendMessage(prefix + ChatColor.GREEN + " You may not break blocks in ffa.");
+                p.sendMessage(plugin.prefix + ChatColor.GREEN + " You may not break blocks in ffa.");
             }
     }
 
-    @EventHandler
+    @EventHandler(priority= EventPriority.LOWEST)
     public void onPlace(BlockPlaceEvent e) {
             Player p = e.getPlayer();
-            if (ms.killstreak.containsKey(p)) {
+            if (plugin.killstreak.containsKey(p)) {
                 e.setCancelled(true);
-                p.sendMessage(prefix + ChatColor.GREEN + " You may not place blocks in ffa.");
+                p.sendMessage(plugin.prefix + ChatColor.GREEN + " You may not place blocks in ffa.");
             }
     }
 }

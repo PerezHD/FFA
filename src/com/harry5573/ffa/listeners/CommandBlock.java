@@ -13,18 +13,17 @@ import com.harry5573.ffa.Main;
 
 public class CommandBlock implements Listener {
 
-    String prefix = ChatColor.GOLD + "[FFA]:";
-    public static Main ms = null;
+    Main plugin;
 
-    public CommandBlock(Plugin plugin) {
-        ms = (Main) plugin;
+    public CommandBlock(Main instance) {
+        this.plugin = instance;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player p = event.getPlayer();
-        if (ms.killstreak.containsKey(p)) {
-            p.sendMessage(prefix + ChatColor.RED + " You can't use commands while in FFA!");
+        if (plugin.killstreak.containsKey(p)) {
+            p.sendMessage(plugin.prefix + ChatColor.RED + " You can't use commands while in FFA!");
             event.setCancelled(true);
         }
     }
