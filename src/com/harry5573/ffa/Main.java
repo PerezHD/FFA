@@ -49,7 +49,7 @@ public class Main extends JavaPlugin implements Listener {
     public HashMap<Player, Integer> killstreak = new HashMap();
     public static HashMap<Player, ArrayList<Block>> inFFA = new HashMap();
     
-    public String prefix = ChatColor.RED + "[" + ChatColor.YELLOW + "TnTFFA" + ChatColor.RED + "]";
+    public String prefix = ChatColor.WHITE + "[" + ChatColor.YELLOW + "TnTFFA" + ChatColor.WHITE + "]";
 
     //Start Plugin
     @Override
