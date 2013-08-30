@@ -1,5 +1,5 @@
 name: FFA
-version: 4.0-SNAPSHOT
+version: 5.0-SNAPSHOT
 description: Minecraft pvp freeforall minigame!
 main: com.harry5573.ffa.Main
 commands:
