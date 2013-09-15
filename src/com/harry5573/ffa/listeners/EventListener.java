@@ -37,7 +37,7 @@ public class EventListener implements Listener {
         this.plugin = instance;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBreak(BlockBreakEvent e) {
         Player p = e.getPlayer();
         if (plugin.killstreak.containsKey(p)) {
@@ -46,7 +46,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlace(BlockPlaceEvent e) {
         Player p = e.getPlayer();
         if (plugin.killstreak.containsKey(p)) {
@@ -55,7 +55,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player p = event.getPlayer();
         if (plugin.killstreak.containsKey(p)) {
@@ -64,7 +64,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void inventoryFFADrop(PlayerDropItemEvent event) {
         Player p = event.getPlayer();
         if (plugin.killstreak.containsKey(p)) {
@@ -74,7 +74,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onFFAOpenEvent(InventoryOpenEvent e) {
         Player p = (Player) e.getPlayer();
         if (!(plugin.killstreak.containsKey(p))) {
@@ -94,7 +94,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onFFAPickupItem(PlayerPickupItemEvent event) {
         Player p = event.getPlayer();
         if (plugin.killstreak.containsKey(p)) {
@@ -103,7 +103,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onMove(PlayerMoveEvent event) {
         Player p = event.getPlayer();
 
@@ -117,7 +117,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onFFAQuit(PlayerQuitEvent event) {
         Player p = event.getPlayer();
         if ((plugin.killstreak.containsKey(p))) {
@@ -125,7 +125,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onKick(PlayerKickEvent event) {
         Player p = event.getPlayer();
         if ((plugin.killstreak.containsKey(p))) {
@@ -133,7 +133,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void respawn(PlayerRespawnEvent event) {
         Player p = event.getPlayer();
         if ((plugin.killstreak.containsKey(p))) {
@@ -141,7 +141,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
@@ -162,7 +162,7 @@ public class EventListener implements Listener {
     }
 
     //Stop them from teleporting
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
         {

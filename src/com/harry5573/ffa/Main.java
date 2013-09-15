@@ -1,5 +1,6 @@
 package com.harry5573.ffa;
 
+import com.harry5573.ffa.killstreaks.Killstreak;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -32,10 +33,9 @@ public class Main extends JavaPlugin implements Listener {
     public static HashMap<String, ItemStack[]> inventoryArmorContents = new HashMap();
     public HashMap<String, ItemStack> cursor = new HashMap();
     public HashMap<Player, Integer> killstreak = new HashMap();
+    
     public static HashMap<Player, ArrayList<Block>> inFFA = new HashMap();
-    
     public String prefix = null;
-    
     public EventListener elistener;
     public ItemHandler ih;
 
@@ -43,24 +43,26 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         plugin = this;
-
         
         timer.clear();
         inventoryContents.clear();
         inventoryArmorContents.clear();
         cursor.clear();
         killstreak.clear();
-        
+
         this.elistener = new EventListener(this);
         this.ih = new ItemHandler(this);
 
         PluginManager pm = getServer().getPluginManager();
+        
         pm.registerEvents(new EventListener(this), this);
+        pm.registerEvents(new Killstreak(this), this);
+        
         System.out.println("[FFA] Plugin Has Been Started!");
 
         saveDefaultConfig();
         saveConfig();
-        
+
         prefix = getConfig().getString("prefix").replaceAll("(&([a-f0-9]))", "\u00A7$2");
     }
     //Disable Plugin 
@@ -79,48 +81,45 @@ public class Main extends JavaPlugin implements Listener {
     public void joinFFA(final Player p) {
         int i = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
             public void run() {
-                if (Main.plugin.timer.containsKey(p)) {        
+                if (Main.plugin.timer.containsKey(p)) {
                     //Save the players real world items
                     saveInventory(p);
                     saveArmor(p);
                     saveCursor(p);
                     //Send the player a message to say there stuff has been saved
                     p.sendMessage(prefix + ChatColor.GRAY + " Your old inventory has been saved");
-                    
+
                     //Give them there new items and potions
                     ih.giveItems(p);
-                    ih.givePotions(p);
-                    
+                    ih.giveStuff(p);
+
                     Bukkit.broadcastMessage(prefix + ChatColor.DARK_AQUA + " " + p.getName() + " Has joined FFA! Type /ffa to join them");
-                    
+
                     plugin.timer.remove(p);
-                    
+
                     randomLocation(p);
-                    
+
                     p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0));
-                    
+
                     plugin.killstreak.put(p, Integer.valueOf(0));
-                    
+
                     p.updateInventory();
-                    
-                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "tptoggle " + p.getName() + " off");
-                    
+
+                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "fly " + p.getName() + " off");
+
                     p.setLevel(0);
+                    p.setAllowFlight(false);
 
                     p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 80, 2));
                 }
             }
-        } 
-      , 100L);
+        }, 100L);
         plugin.timer.put(p, Integer.valueOf(i));
     }
 
-
     public void removeFromFFA(final Player p) {
         if ((plugin.killstreak.containsKey(p))) {
-            
-         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "tptoggle " + p.getName() + " on");
-            
+
             for (PotionEffect pf : p.getActivePotionEffects()) {
                 p.removePotionEffect(pf.getType());
             }
@@ -133,23 +132,21 @@ public class Main extends JavaPlugin implements Listener {
             p.setItemOnCursor(null);
 
             p.setHealth(0);
-            
+
             restorePlayerStuff(p);
-            
+
             plugin.inventoryArmorContents.remove(p.getName());
             plugin.inventoryContents.remove(p.getName());
             plugin.cursor.remove(p.getName());
             plugin.killstreak.remove(p);
-            
+
             p.sendMessage(prefix + ChatColor.GREEN + " You were removed from FFA due to the plugin shutting down or reloading!");
         }
     }
-    
-    public void respawnFFA(final Player p) {
-        if ((plugin.killstreak.containsKey(p))) {
 
-           Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "tptoggle " + p.getName() + " on");
-            
+    public void respawnFFA(final Player p) {
+        if (plugin.killstreak.containsKey(p)) {
+
             for (PotionEffect pf : p.getActivePotionEffects()) {
                 p.removePotionEffect(pf.getType());
             }
@@ -179,7 +176,7 @@ public class Main extends JavaPlugin implements Listener {
 
         if (command.getName().equalsIgnoreCase("ffa")) {
 
-            if (sender == null) {
+            if (p == null) {
                 sender.sendMessage("[FFA] You must be a player to do that!");
                 return true;
             }
@@ -246,7 +243,7 @@ public class Main extends JavaPlugin implements Listener {
                         p.sendMessage(this.prefix + ChatColor.GOLD + " Spawn 4 set @ your location.");
                         this.saveConfig();
                         return true;
-                    } else  {
+                    } else {
                         p.sendMessage(this.prefix + ChatColor.RED + " Usage: /ffa setspawn <1/4>");
                         return true;
                     }
@@ -279,14 +276,14 @@ public class Main extends JavaPlugin implements Listener {
                         p.sendMessage(this.prefix + ChatColor.GOLD + " Spawn 4 set to null.");
                         this.saveConfig();
                         return true;
-                     } else  {
+                    } else {
                         p.sendMessage(this.prefix + ChatColor.RED + " Usage: /ffa removespawn <1/4>");
                         return true;
-                      }
-                     } else {
-                        p.sendMessage(this.prefix + ChatColor.RED + " Usage: /ffa set||removespawn <1/4>");
                     }
+                } else {
+                    p.sendMessage(this.prefix + ChatColor.RED + " Usage: /ffa set||removespawn <1/4>");
                 }
+            }
         }
         return false;
     }
@@ -358,7 +355,7 @@ public class Main extends JavaPlugin implements Listener {
 
     public void saveCursor(Player p) {
         System.out.println("[FFA] Saving players armour...");
-        
+
         if (p.getItemOnCursor() == null) {
             return;
         }
@@ -369,10 +366,13 @@ public class Main extends JavaPlugin implements Listener {
         System.out.println("[FFA] Saving players inventory...");
         plugin.inventoryContents.put(p.getName(), p.getInventory().getContents());
     }
-    
+
     public void restorePlayerStuff(Player p) {
         p.getInventory().setContents((ItemStack[]) inventoryContents.get(p.getName()));
         p.getInventory().setArmorContents((ItemStack[]) inventoryArmorContents.get(p.getName()));
-        p.getInventory().addItem((ItemStack) cursor.get(p.getName()));
+
+        if (cursor.containsKey(p.getName())) {
+            p.getInventory().addItem((ItemStack) cursor.get(p.getName()));
+        }
     }
 }

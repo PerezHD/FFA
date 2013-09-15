@@ -53,21 +53,18 @@ public class ItemHandler {
         giveArmour(p);
     }
 
-    public void givePotions(Player p) {
-        ItemStack regen = new ItemStack(Material.POTION, 1, (short) 16481);
-        ItemStack health = new ItemStack(Material.POTION, 1, (short) 16421);
+    public void giveStuff(Player p) {
+        ItemStack health = new ItemStack(Material.MUSHROOM_SOUP, 1);
 
         ItemStack food = new ItemStack(Material.COOKED_BEEF, 32);
 
-        p.getInventory().addItem(regen);
-        p.getInventory().addItem(regen);
-        p.getInventory().addItem(regen);
-        p.getInventory().addItem(regen);
-        p.getInventory().addItem(regen);
 
         p.getInventory().setItem(9, food);
 
-
+        p.getInventory().addItem(health);
+        p.getInventory().addItem(health);
+        p.getInventory().addItem(health);
+        p.getInventory().addItem(health);
         p.getInventory().addItem(health);
         p.getInventory().addItem(health);
         p.getInventory().addItem(health);
