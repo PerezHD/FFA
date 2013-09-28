@@ -1,1 +1,8 @@
-prefix: '&f[&6Arkham&4FFA&f]'
+# FFA Configuration by harry5573
+prefix: '&f[&4FFA&f]'
+warmuptime: 6
+3killcash: 100.0
+10killcash: 1000.0
+FastFoodHP: 3
+AllowedFoods:
+- COOKED_BEEF
