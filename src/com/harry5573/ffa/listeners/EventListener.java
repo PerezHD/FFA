@@ -32,7 +32,6 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 /**
@@ -68,7 +67,8 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player p = event.getPlayer();
-        if (plugin.killstreak.containsKey(p)) {
+        
+        if (plugin.killstreak.containsKey(p) || (plugin.timer.containsKey(p))) {
             p.sendMessage(plugin.getPrefix() + ChatColor.RED + " You can't use commands while in FFA!");
             event.setCancelled(true);
         }

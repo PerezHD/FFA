@@ -1,7 +1,7 @@
 package com.harry5573.ffa;
 
 import com.gmail.nossr50.api.AbilityAPI;
-import com.harry5573.ffa.killstreaks.Killstreak;
+import com.harry5573.ffa.killstreaks.DeathListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -24,7 +24,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 import com.harry5573.ffa.listeners.EventListener;
 import com.harry5573.food.FastFood;
-import com.harry5573.items.ItemGiver;
+import com.harry5573.items.KillstreakListener;
 import com.harry5573.items.ItemHandler;
 import com.harry5573.region.Region;
 import com.harry5573.region.RegionUtils;
@@ -74,9 +74,9 @@ public class Main extends JavaPlugin implements Listener {
         PluginManager pm = getServer().getPluginManager();
         
         pm.registerEvents(new EventListener(this), this);
-        pm.registerEvents(new Killstreak(this), this);
+        pm.registerEvents(new DeathListener(this), this);
         pm.registerEvents(new FastFood(this), this);
-        pm.registerEvents(new ItemGiver(this), this);
+        pm.registerEvents(new KillstreakListener(this), this);
         
         System.out.println("[FFA] Plugin Has Been Started!");
 
@@ -117,15 +117,14 @@ public class Main extends JavaPlugin implements Listener {
         for (Player p : Bukkit.getOnlinePlayers()) {
             this.removeFromFFA(p);
         }
-
         System.out.println("[FFA] Plugin Has Been Stopped And All Players In FFA Removed!");
         saveConfig();
     }
-    
+
     public Region getFFARegion() {
         return ffaregion;
     }
-    
+
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
@@ -174,7 +173,10 @@ public class Main extends JavaPlugin implements Listener {
             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "fly " + p.getName() + " off");
 
             p.setLevel(0);
-            p.setAllowFlight(false);
+            
+            if (p.isFlying()) {
+                p.setFlying(false);
+            } 
             
             p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 80, 2));
     }
@@ -485,10 +487,10 @@ public class Main extends JavaPlugin implements Listener {
     public void setRegion(World world, BlockVector p1, BlockVector p2) {
         this.getConfig().set("region.world", world.getName());
         this.getConfig().set("region.p1.x", p1.getX());
-        this.getConfig().set("region.p1.y", 0);
+        this.getConfig().set("region.p1.y", p1.getY());
         this.getConfig().set("region.p1.z", p1.getZ());
         this.getConfig().set("region.p2.x", p2.getX());
-        this.getConfig().set("region.p2.y", 256);
+        this.getConfig().set("region.p2.y", p2.getY());
         this.getConfig().set("region.p2.z", p2.getZ());
         this.saveConfig();
     }
