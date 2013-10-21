@@ -178,6 +178,8 @@ public class Main extends JavaPlugin implements Listener {
                 p.setFlying(false);
             } 
             
+            p.setGameMode(GameMode.SURVIVAL);
+            
             p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 80, 2));
     }
 

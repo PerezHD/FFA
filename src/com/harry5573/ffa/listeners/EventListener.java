@@ -10,6 +10,7 @@ import com.harry5573.region.Region;
 import com.harry5573.region.Selection;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -32,6 +33,8 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.util.Vector;
 
 /**
@@ -52,8 +55,8 @@ public class EventListener implements Listener {
         if (plugin.killstreak.containsKey(p)) {
             e.setCancelled(true);
             p.sendMessage(plugin.getPrefix() + ChatColor.GREEN + " You may not break blocks in ffa.");
-        }
-    }
+        } 
+    } 
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlace(BlockPlaceEvent e) {
@@ -63,8 +66,8 @@ public class EventListener implements Listener {
             p.sendMessage(plugin.getPrefix() + ChatColor.GREEN + " You may not place blocks in ffa.");
         }
     }
-
-    @EventHandler(priority = EventPriority.LOWEST)
+   
+@EventHandler(priority = EventPriority.LOWEST)
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player p = event.getPlayer();
         
