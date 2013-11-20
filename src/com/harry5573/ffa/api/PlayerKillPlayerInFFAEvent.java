@@ -12,13 +12,13 @@ import org.bukkit.event.HandlerList;
  *
  * @author Harry5573
  */
-public class PlayerKillstreakEvent extends Event {
+public class PlayerKillPlayerInFFAEvent extends Event {
  
     private static final HandlerList handlers = new HandlerList();
     private int killstreak;
     private Player player;
     
-    public PlayerKillstreakEvent(final Player p, final int ks) {
+    public PlayerKillPlayerInFFAEvent(final Player p, final int ks) {
         this.killstreak = ks;
         this.player = p;
     }

@@ -1,8 +1,8 @@
 name: FFA
-version: 9.0-SNAPSHOT
+version: 10.0-SNAPSHOT
 description: Minecraft pvp freeforall minigame!
-main: com.harry5573.ffa.Main
-softdepend: [Vault, Essentials, mcMMO]
+main: com.harry5573.ffa.FreeForAll
+softdepend: [Vault]
 commands:
   ffa: 
     description: Teleport to FFA

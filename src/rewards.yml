@@ -1,0 +1,16 @@
+# FreeForAll By Harry5573 Cash Reward System Configuration
+#
+# Default Cash: If they dont have a rank
+killstreak:
+  '3':
+    defaultcash: 100
+    infinite: true
+    ranks:
+      a: 10000
+      b: 10000
+  '6':
+    defaultcash: '000
+    infinite: false
+    ranks:
+      a: 100000
+      b: 100000

@@ -1,8 +1,37 @@
-# FFA Configuration by harry5573
-prefix: '&f[&4FFA&f]'
-warmuptime: 6
-3killcash: 100.0
-10killcash: 1000.0
-FastFoodHP: 3
-AllowedFoods:
-- COOKED_BEEF
+# FreeForAll By Harry5573
+# Configuration
+
+# The time in seconds before the player gets teleported to the ffa arena
+teleportdelay: 5
+
+# Should we broadcast when
+broadcast:
+  join: true
+  killstreak: true
+  
+# SpawnWorld: World that the FFA arena is located in (Auto set on setspawn)
+ffaworld: world
+
+# Spawn: Spawns will be randomly picked from here
+spawns:
+  '1':
+    x: 1
+    y: 4
+    z: 1
+    yaw: 1
+    
+# FFA Effect
+effect:
+  joinblind: true
+  joinsound: true
+  killsound: true
+  
+# Scoreboard options
+scoreboard:
+  title: '&cFFA Info'
+# 
+# Stuff we should prevemt
+prevent:
+  movearmor:
+  
+  

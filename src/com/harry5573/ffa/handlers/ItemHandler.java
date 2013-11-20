@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.harry5573.ffa.listeners;
+package com.harry5573.ffa.handlers;
 
-import com.harry5573.ffa.Main;
+import com.harry5573.ffa.FreeForAll;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.ChatColor;
@@ -21,9 +21,9 @@ import org.bukkit.potion.PotionEffect;
  */
 public class ItemHandler {
 
-    public static Main plugin;
+    FreeForAll plugin;
 
-    public ItemHandler(Main instance) {
+    public ItemHandler(FreeForAll instance) {
         this.plugin = instance;
     }
 
@@ -53,42 +53,13 @@ public class ItemHandler {
         giveArmour(p);
     }
 
-    public void giveStuff(Player p) {
-        ItemStack health = new ItemStack(Material.MUSHROOM_SOUP, 1);
-
-        ItemStack food = new ItemStack(Material.COOKED_BEEF, 32);
-
-
-        p.getInventory().setItem(9, food);
-
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
-        p.getInventory().addItem(health);
+    public void giveFood(Player p) {
+        ItemStack food = new ItemStack(Material.COOKED_BEEF, 16);
+        p.getInventory().addItem(food);
     }
     
     public void addIronTools(Player p) {
-                //Weapons (Sword and Axe)
+        //Weapons (Sword and Axe)
         ItemStack axe = new ItemStack(Material.IRON_AXE);
         ItemStack sword = new ItemStack(Material.IRON_SWORD);
         //Enchant The Sword And Axe
@@ -116,7 +87,7 @@ public class ItemHandler {
         p.getInventory().setItem(1, axe);
     }
     
-    public void giveBow(Player p) {
+    public void giveBowAndArrow(Player p) {
         //New Bow For Player After 3 Kills
         ItemStack bow = new ItemStack(Material.BOW);
         bow.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
@@ -125,6 +96,7 @@ public class ItemHandler {
 
         p.getInventory().setItem(8, bow);
         p.getInventory().setItem(9, arrow);
+        p.sendMessage(plugin.messageman.getPrefix() + ChatColor.GRAY + " You have been given a bow and arrow!");
     }
 
     public void addDiamondTools(Player p) {
@@ -152,10 +124,10 @@ public class ItemHandler {
 
         p.getInventory().setItem(0, sworddiamond);
         p.getInventory().setItem(1, axediamond);
+        p.sendMessage(plugin.messageman.getPrefix() + ChatColor.AQUA + " Your weapons have been upgraded!");
     }
 
     public void giveArmour(Player p) {
-
         //Armour
         ItemStack helmet = new ItemStack(Material.IRON_HELMET, 1);
         ItemStack chestplate = new ItemStack(Material.IRON_CHESTPLATE, 1);
@@ -201,5 +173,6 @@ public class ItemHandler {
         p.getInventory().setChestplate(chestplate);
         p.getInventory().setLeggings(leggings);
         p.getInventory().setBoots(boots);
+        p.sendMessage(plugin.messageman.getPrefix() + ChatColor.GOLD + " You have been given a set of armor!");
     }
 }

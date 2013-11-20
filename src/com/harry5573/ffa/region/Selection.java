@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.harry5573.region;
+package com.harry5573.ffa.region;
 
 import org.bukkit.util.BlockVector;
 

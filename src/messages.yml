@@ -1,0 +1,11 @@
+# FreeForAll by harry5573 message configuration
+# Here you can customise all of your messages!
+messages:
+  prefix: '&7[&cFFA&7]:'
+  moneygive: '&a$MONEY &dhas been added to your account.'
+  warmup: '&7Joining the &cFFA &7arena in &aTIME &7seconds.'
+  broadcastjoin: '&cPLAYER &3has joined &6FFA&3! Go stop him/her! &b/ffa join'
+  broadcastkillstreak: '&dPLAYER &cis on a &3KS &ckillstreak! (/ffa join)'
+  thanks: '&dThanks for playing &cFFA&d!'
+  prejoin: '&3Your about to join &cFFA &3get ready for battle!'
+  oldsave: '&7Your old inventory/items have been saved! You will get them back later!'
