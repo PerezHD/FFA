@@ -56,7 +56,7 @@ public class FFACommandHandler implements CommandExecutor {
     }
 
     private void showHelp(CommandSender sender) {
-        sender.sendMessage(ChatColor.YELLOW + "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+        sender.sendMessage(ChatColor.GOLD + "___________________.[" + ChatColor.DARK_GREEN + " FFA Help " + ChatColor.GOLD + "].___________________");
 
         for (FFACommand command : subCommands.values()) {
             String permission = command.getPermission();
@@ -65,7 +65,7 @@ public class FFACommandHandler implements CommandExecutor {
             }
         }
         sender.sendMessage(ChatColor.RED + "FFA Version " + plugin.getVersion() + " by harry5573!");
-        sender.sendMessage(ChatColor.YELLOW + "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+        sender.sendMessage(ChatColor.GOLD + "------------------------------------------------");
     }
 
     public void registerCommand(String name, FFACommand command) {

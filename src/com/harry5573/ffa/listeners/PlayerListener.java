@@ -7,7 +7,7 @@ package com.harry5573.ffa.listeners;
 import com.harry5573.ffa.FreeForAll;
 import com.harry5573.ffa.api.PlayerKillPlayerInFFAEvent;
 import com.harry5573.ffa.api.PlayersInFFAChangeEvent;
-import com.harry5573.ffa.managers.MessageManager;
+import com.harry5573.ffa.managers.MessageManager.MessageType;
 import com.harry5573.ffa.region.LocationTools;
 import com.harry5573.ffa.region.Region;
 import com.harry5573.ffa.region.Selection;
@@ -223,9 +223,7 @@ public class PlayerListener implements Listener {
         Player killer = killed.getKiller();
 
         if (killer != null) {
-            if (plugin.getConfig().getBoolean("effect.killsound")) {
-                killer.playSound(killer.getLocation(), Sound.NOTE_BASS, 1F, 0);
-            }
+            plugin.pmanager.messageAllPlayersInFFA(plugin.messageman.getPrefix() + " " + plugin.messages.get(MessageType.KILL).replaceAll("DEAD", killed.getName()).replaceAll("KILLER", killer.getName()));
 
             int streak = plugin.playerKillstreak.get(killer);
             int newstreak = streak + 1;
@@ -234,6 +232,10 @@ public class PlayerListener implements Listener {
             plugin.playerKillstreak.put(killer, newstreak);
             killer.setLevel(newstreak);
 
+            if (plugin.getConfig().getBoolean("effect.killsound")) {
+                killer.playSound(killer.getLocation(), Sound.NOTE_BASS, 1F, 0);
+            }
+
             PlayerKillPlayerInFFAEvent killstreakevent = new PlayerKillPlayerInFFAEvent(killer, newstreak);
             Bukkit.getServer().getPluginManager().callEvent(killstreakevent);
         }
@@ -241,7 +243,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChange(PlayersInFFAChangeEvent e) {
-        for (Player inFFA : plugin.playerInFFA) {
+        for (Player inFFA : plugin.playerKillstreak.keySet()) {
             plugin.pmanager.updateScoreboard(inFFA);
         }
     }
@@ -251,12 +253,10 @@ public class PlayerListener implements Listener {
         Player p = e.getPlayer();
         int ks = e.getKillStreak();
 
-        for (Player inFFA : plugin.playerInFFA) {
+        for (Player inFFA : plugin.playerKillstreak.keySet()) {
             plugin.pmanager.updateScoreboard(inFFA);
         }
 
-        plugin.rewardman.tryReward(p, ks);
-
-        plugin.ih.giveFood(p);
+        plugin.rewardman.tryRewardPlayer(p, ks);
     }
 }

@@ -25,15 +25,15 @@ import com.harry5573.ffa.utilitys.MessageUtil;
 public class MessageManager {
 
     FreeForAll plugin;
-    
+
     public MessageManager(FreeForAll instance) {
         this.plugin = instance;
     }
-    
+
     public enum MessageType {
-        PREFIX, MONEYGIVE, WARMUP, BROADCASTJOIN, BROADCASTKILLSTREAK, THANKS, PREJOIN, OLDSAVE, KITGIVE
+        PREFIX, MONEYGIVE, WARMUP, BROADCASTJOIN, BROADCASTKILLSTREAK, THANKS, PREJOIN, OLDSAVE, KITGIVE, CASHREWARD, KILL, NOTENABLE
     }
-    
+
     /**
      * Loads all the needed messages
      */
@@ -47,6 +47,9 @@ public class MessageManager {
         plugin.messages.put(MessageType.PREJOIN, MessageUtil.translateToColorCode(plugin.cfManager.getMessagesConfig().getString("messages.prejoin")));
         plugin.messages.put(MessageType.OLDSAVE, MessageUtil.translateToColorCode(plugin.cfManager.getMessagesConfig().getString("messages.oldsave")));
         plugin.messages.put(MessageType.KITGIVE, MessageUtil.translateToColorCode(plugin.cfManager.getMessagesConfig().getString("messages.kitgive")));
+        plugin.messages.put(MessageType.CASHREWARD, MessageUtil.translateToColorCode(plugin.cfManager.getMessagesConfig().getString("messages.cashreward")));
+        plugin.messages.put(MessageType.KILL, MessageUtil.translateToColorCode(plugin.cfManager.getMessagesConfig().getString("messages.kill")));
+        plugin.messages.put(MessageType.NOTENABLE, MessageUtil.translateToColorCode(plugin.cfManager.getMessagesConfig().getString("messages.notenable")));
     }
 
     /**

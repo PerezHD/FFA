@@ -44,21 +44,20 @@ public class ItemManager {
         HashMap<ItemStack, Integer> kitItemAndAmount = new HashMap();
 
         for (String itemstring : plugin.cfManager.getItemsConfig().getStringList("kit." + kitname)) {
-
             String[] stringvalue = itemstring.split(":");
 
             //If there is no short, just itemid and amount
             if (stringvalue.length == 2) {
-                ItemStack item = new ItemStack(Material.getMaterial(Integer.valueOf(stringvalue[0])), 0);
+                ItemStack item = new ItemStack(Material.getMaterial(Integer.valueOf(stringvalue[0])), 1);
                 Integer amount = Integer.valueOf(stringvalue[1]);
                 kitItemAndAmount.put(item, amount);
-            } //If the item has data 
-            else if (stringvalue.length == 3) {
-                ItemStack item = new ItemStack(Material.getMaterial(Integer.valueOf(stringvalue[0])), 0, Short.valueOf(stringvalue[1]));
+            } else if (stringvalue.length == 3) {
+                ItemStack item = new ItemStack(Material.getMaterial(Integer.valueOf(stringvalue[0])), 1, Short.valueOf(stringvalue[1]));
                 Integer amount = Integer.valueOf(stringvalue[2]);
                 kitItemAndAmount.put(item, amount);
             }
         }
+        
         return kitItemAndAmount;
     }
 
@@ -72,17 +71,29 @@ public class ItemManager {
         HashMap<ItemStack, Integer> kitItems = this.parseConfigKit(kitname);
 
         for (ItemStack stack : kitItems.keySet()) {
-            for (int i = 0; i <= kitItems.get(stack); i++) {
-                player.getInventory().addItem(stack);
+            for (int i = 1; i <= kitItems.get(stack); i++) {
+
+                if (stack.getType() == Material.LEATHER_HELMET || stack.getType() == Material.CHAINMAIL_HELMET || stack.getType() == Material.GOLD_HELMET || stack.getType() == Material.IRON_HELMET || stack.getType() == Material.DIAMOND_HELMET) {
+                    player.getInventory().setHelmet(stack);
+                } else if (stack.getType() == Material.LEATHER_CHESTPLATE || stack.getType() == Material.CHAINMAIL_CHESTPLATE || stack.getType() == Material.GOLD_CHESTPLATE || stack.getType() == Material.IRON_CHESTPLATE || stack.getType() == Material.DIAMOND_CHESTPLATE) {
+                    player.getInventory().setChestplate(stack);
+                } else if (stack.getType() == Material.LEATHER_LEGGINGS || stack.getType() == Material.CHAINMAIL_LEGGINGS || stack.getType() == Material.GOLD_LEGGINGS || stack.getType() == Material.IRON_LEGGINGS || stack.getType() == Material.DIAMOND_LEGGINGS) {
+                    player.getInventory().setLeggings(stack);
+                } else if (stack.getType() == Material.LEATHER_BOOTS || stack.getType() == Material.CHAINMAIL_BOOTS || stack.getType() == Material.GOLD_BOOTS || stack.getType() == Material.IRON_BOOTS || stack.getType() == Material.DIAMOND_BOOTS) {
+                    player.getInventory().setBoots(stack);
+                } else {
+                    player.getInventory().addItem(stack);
+                }
             }
         }
-        
+
         player.sendMessage(plugin.messages.get(MessageType.KITGIVE).replaceAll("KIT", kitname));
     }
-    
+
     /**
      * Gives a player the starter kits
-     * @param p 
+     *
+     * @param p
      */
     public void givePlayerStarterKits(Player p) {
         for (String kit : plugin.cfManager.getItemsConfig().getStringList("joinkits")) {

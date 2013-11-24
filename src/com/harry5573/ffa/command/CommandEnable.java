@@ -16,25 +16,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 package com.harry5573.ffa.command;
 
 import com.harry5573.ffa.FreeForAll;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  *
  * @author Harry5573
  */
-public class CommandShutdown extends FFACommand {
+public class CommandEnable extends FFACommand {
 
     FreeForAll plugin;
 
-    public CommandShutdown(FreeForAll instance) {
+    public CommandEnable(FreeForAll instance) {
         this.plugin = instance;
     }
 
     @Override
     public void init() {
-        usage = "/ffa shutdown";
-        description = "Shutdown the FFA plugin";
+        usage = "/ffa enable";
+        description = "Enables/Disables players joining FFA";
         permission = "ffa.admin";
     }
 
@@ -50,7 +52,21 @@ public class CommandShutdown extends FFACommand {
             return;
         }
 
-        sender.sendMessage(plugin.messageman.getPrefix() + ChatColor.GREEN + " Plugin shutdown. Please RESTART the server to enable it.");
-        plugin.shutdown();
+        if (plugin.enabled) {
+            plugin.getConfig().set("enabled", false);
+            plugin.saveConfig();
+            plugin.enabled = false;
+
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                plugin.pmanager.removeFromFFA(p, true);
+            }
+
+            sender.sendMessage(plugin.messageman.getPrefix() + " " + ChatColor.RED + "Plugin disabled!");
+        } else {
+            plugin.getConfig().set("enabled", true);
+            plugin.saveConfig();
+            plugin.enabled = true;
+            sender.sendMessage(plugin.messageman.getPrefix() + " " + ChatColor.GREEN + "Plugin enabled!");
+        }
     }
 }

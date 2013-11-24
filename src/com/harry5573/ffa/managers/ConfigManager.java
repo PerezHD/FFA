@@ -47,6 +47,8 @@ public class ConfigManager {
     public void load() {
         plugin.saveDefaultConfig();
 
+        plugin.enabled = plugin.getConfig().getBoolean("enabled");
+        
         if (messagesConfigFile == null) {
             messagesConfigFile = new File(plugin.getDataFolder(), "messages.yml");
         }

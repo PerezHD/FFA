@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 package com.harry5573.ffa.command;
 
 import com.harry5573.ffa.FreeForAll;
+import com.harry5573.ffa.managers.MessageManager.MessageType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -53,8 +54,12 @@ public class CommandJoin extends FFACommand {
         if (!this.senderIsPlayer(sender)) {
             plugin.log("Not a console command!");
         }
-        Player player = (Player)sender;
-        
-        plugin.pmanager.joinFFA(player);
+        Player player = (Player) sender;
+
+        if (plugin.enabled) {
+            plugin.pmanager.joinFFA(player);
+        } else {
+            player.sendMessage(plugin.messageman.getPrefix() + " " + plugin.messages.get(MessageType.NOTENABLE));
+        }
     }
 }

@@ -1,18 +1,36 @@
 # FreeForAll By Harry5573 Cash Reward System Configuration
 #
 # Default Cash: If they dont have a rank
+# Infinite: If the killstreak is infinite eg 3 is 3, 6, 9
 killstreak:
+  'everykill':
+    infinite: true
+    broadcast: false
+    givecash: false
+    givekits:
+    - 'food'
+  '1':
+    infinite: false
+    broadcast: false
+    givecash: false
+    givekits:
+    - 'diamond'
+    removeitems:
+    - 'IRON_SWORD'
+    - 'IRON_AXE'
   '3':
-    defaultcash: 100
     infinite: true
     broadcast: true
+    givecash: true
+    defaultcash: 100
     ranks:
       a: 10000
       b: 10000
   '6':
-    defaultcash: 000
-    infinite: false
-    broadcast: true
+    infinite: true
+    broadcast: false
+    givecash: true
+    defaultcash: 1000
     ranks:
       a: 100000
       b: 100000

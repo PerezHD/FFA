@@ -5,7 +5,7 @@ import com.harry5573.ffa.command.CommandJoin;
 import com.harry5573.ffa.command.CommandReload;
 import com.harry5573.ffa.command.CommandRemoveSpawn;
 import com.harry5573.ffa.command.CommandSetSpawn;
-import com.harry5573.ffa.command.CommandShutdown;
+import com.harry5573.ffa.command.CommandEnable;
 import com.harry5573.ffa.command.FFACommandHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +19,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.harry5573.ffa.listeners.PlayerListener;
-import com.harry5573.ffa.handlers.ItemHandler;
 import com.harry5573.ffa.managers.ConfigManager;
 import com.harry5573.ffa.managers.GameManager;
 import com.harry5573.ffa.managers.ItemManager;
@@ -31,14 +30,11 @@ import com.harry5573.ffa.managers.RegionManager;
 import com.harry5573.ffa.managers.RewardsManager;
 import com.harry5573.ffa.utilitys.SpawnData;
 import com.harry5573.ffa.managers.SpawnManager;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 public class FreeForAll extends JavaPlugin implements Listener {
 
@@ -86,7 +82,6 @@ public class FreeForAll extends JavaPlugin implements Listener {
      * Needed classes
      */
     public PlayerListener plistener;
-    public ItemHandler ih;
     public RegionManager rus;
     public PlayerManager pmanager;
     public RegionManager regionman;
@@ -103,6 +98,11 @@ public class FreeForAll extends JavaPlugin implements Listener {
     public static Economy econ = null;
     public static Permission permission = null;
 
+    /**
+     * Is the plugin enabled (Joinable?)
+     */
+    public boolean enabled = false;
+    
     @Override
     public void onEnable() {
         plugin = this;
@@ -118,7 +118,6 @@ public class FreeForAll extends JavaPlugin implements Listener {
         playerKillstreak.clear();
 
         this.plistener = new PlayerListener(this);
-        this.ih = new ItemHandler(this);
         this.rus = new RegionManager(this);
         this.pmanager = new PlayerManager(this);
         this.regionman = new RegionManager(this);
@@ -174,7 +173,7 @@ public class FreeForAll extends JavaPlugin implements Listener {
         this.getCommand("ffa").setExecutor(handler);
         //Then we register the rest
         handler.registerCommand("join", new CommandJoin(this));
-        handler.registerCommand("shutdown", new CommandShutdown(this));
+        handler.registerCommand("enable", new CommandEnable(this));
         handler.registerCommand("reload", new CommandReload(this));
         handler.registerCommand("define", new CommandDefine(this));
         handler.registerCommand("setspawn", new CommandSetSpawn(this));

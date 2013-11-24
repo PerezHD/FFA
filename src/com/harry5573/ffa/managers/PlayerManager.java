@@ -16,7 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 package com.harry5573.ffa.managers;
 
 import com.harry5573.ffa.FreeForAll;
-import com.harry5573.ffa.api.PlayerKillPlayerInFFAEvent;
 import com.harry5573.ffa.api.PlayersInFFAChangeEvent;
 import com.harry5573.ffa.managers.MessageManager.MessageType;
 import com.harry5573.ffa.task.WarmupTask;
@@ -91,13 +90,13 @@ public class PlayerManager {
         p.setFlying(false);
         p.setGameMode(GameMode.SURVIVAL);
 
-        plugin.itemman.givePlayerStarterKits(p);
-
         plugin.playerKillstreak.put(p, 0);
         plugin.warmupTasks.remove(p);
 
+        plugin.itemman.givePlayerStarterKits(p);
+
         this.updateScoreboard(p);
-        
+
         if (plugin.getConfig().getBoolean("broadcast.join")) {
             Bukkit.broadcastMessage(plugin.messageman.getPrefix() + " " + plugin.messages.get(MessageType.BROADCASTJOIN).replaceAll("PLAYER", p.getName()));
         }
@@ -112,8 +111,6 @@ public class PlayerManager {
 
         PlayersInFFAChangeEvent changeevent = new PlayersInFFAChangeEvent(plugin.gameman.getAmountPlayersInFFA());
         Bukkit.getServer().getPluginManager().callEvent(changeevent);
-        
-        p.updateInventory();
     }
 
     /**
@@ -131,9 +128,6 @@ public class PlayerManager {
         plugin.playerKillstreak.remove(p);
         plugin.playerInFFA.remove(p);
 
-        PlayersInFFAChangeEvent changeevent = new PlayersInFFAChangeEvent(plugin.gameman.getAmountPlayersInFFA());
-        Bukkit.getServer().getPluginManager().callEvent(changeevent);
-
         p.getInventory().clear();
         p.getInventory().setArmorContents(null);
         p.setItemOnCursor(null);
@@ -150,6 +144,9 @@ public class PlayerManager {
         }
 
         this.restorePlayerFromInternalStore(p);
+        
+        PlayersInFFAChangeEvent changeevent = new PlayersInFFAChangeEvent(plugin.gameman.getAmountPlayersInFFA());
+        Bukkit.getServer().getPluginManager().callEvent(changeevent);
     }
 
     /**
@@ -232,7 +229,13 @@ public class PlayerManager {
      * @return 
      */
     public int getPlayerKillstreak(Player p) {
-        return plugin.playerKillstreak.get(p);
+        int amt = plugin.playerKillstreak.get(p);
+        
+        if (amt != 0) {
+            return amt;
+        }
+        
+        return 0;
     }
  
     /**
@@ -252,7 +255,7 @@ public class PlayerManager {
         players.setScore(plugin.gameman.getAmountPlayersInFFA());
 
         Score killstreak = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + "Killstreak:"));
-        killstreak.setScore(getPlayerKillstreak(p));
+        killstreak.setScore(this.getPlayerKillstreak(p));
         
         p.setScoreboard(scoreboard);
     }
@@ -264,5 +267,15 @@ public class PlayerManager {
     public void removeScoreboard(Player p) {
         ScoreboardManager scoreboardManager = plugin.getServer().getScoreboardManager();
         p.setScoreboard(scoreboardManager.getNewScoreboard());
+    }
+    
+    /**
+     * Sends a message to all players in FFA
+     * @param msg 
+     */
+    public void messageAllPlayersInFFA(String msg) {
+        for (Player p : plugin.playerInFFA) {
+            p.sendMessage(msg);
+        }
     }
 }

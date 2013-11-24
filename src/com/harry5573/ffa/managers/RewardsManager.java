@@ -16,9 +16,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 package com.harry5573.ffa.managers;
 
 import com.harry5573.ffa.FreeForAll;
+import com.harry5573.ffa.managers.MessageManager.MessageType;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -38,32 +41,81 @@ public class RewardsManager {
      * @param killstreak
      * @return
      */
-    public boolean tryReward(Player killer, int killstreak) {
+    public void tryRewardPlayer(Player killer, int killstreak) {
         ConfigurationSection section = plugin.cfManager.getRewardsConfig().getConfigurationSection("killstreak");
-        boolean toreturn = false;
-
+        
         for (String s : section.getKeys(false)) {
+            if (s.equals("everykill")) {
+                if (plugin.cfManager.getRewardsConfig().getString("killstreak." + s + ".givecash").equalsIgnoreCase("true")) {
+                    this.rewardPlayerCash(killer, killstreak);
+                }
 
-            //If its exact then we reward them straight away
-            if (killstreak == Integer.valueOf(s)) {
-                this.rewardPlayer(killer, killstreak);
+                for (String itemtype : plugin.cfManager.getRewardsConfig().getStringList("killstreak." + s + ".removeitems")) {
+                    for (ItemStack i : killer.getInventory().getContents()) {
+                        if (i != null) {
+                            if (i.getType() == Material.valueOf(itemtype)) {
+                                killer.getInventory().removeItem(i);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                for (String kit : plugin.cfManager.getRewardsConfig().getStringList("killstreak." + s + ".givekits")) {
+                    plugin.itemman.giveKit(killer, kit);
+                }
+            } else if (killstreak == Integer.valueOf(s)) {
+                if (plugin.cfManager.getRewardsConfig().getString("killstreak." + s + ".givecash").equalsIgnoreCase("true")) {
+                    this.rewardPlayerCash(killer, killstreak);
+                }
+
+                for (String itemtype : plugin.cfManager.getRewardsConfig().getStringList("killstreak." + s + ".removeitems")) {
+                    for (ItemStack i : killer.getInventory().getContents()) {
+                        if (i != null) {
+                            if (i.getType() == Material.valueOf(itemtype)) {
+                                killer.getInventory().removeItem(i);
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                for (String kit : plugin.cfManager.getRewardsConfig().getStringList("killstreak." + s + ".givekits")) {
+                    plugin.itemman.giveKit(killer, kit);
+                }
+
                 this.tryBroadcastStreak(killer, Integer.valueOf(s), killstreak);
-                toreturn = true;
-            } else {
-                //Otherwise if we dont give it to them as its not exact we still check if its infinite then round it if its works then BOOM
+            } else if (killstreak != Integer.valueOf(s)) {
                 if (plugin.cfManager.getRewardsConfig().getString("killstreak." + s + ".infinite").equalsIgnoreCase("true")) {
-                    //if the killstreaks infinite then we round it, if its whole we reward them :)
+                //Otherwise if we dont give it to them as its not exact we still check if its infinite then round it if its works then BOOM
+                //if the killstreaks infinite then we round it, if its whole we reward them :)
                     double value = killstreak / Double.valueOf(s);
 
                     if (value == Math.round(value)) {
-                        this.rewardPlayer(killer, Integer.valueOf(s));
+                        if (plugin.cfManager.getRewardsConfig().getString("killstreak." + s + ".givecash").equalsIgnoreCase("true")) {
+                            this.rewardPlayerCash(killer, Integer.valueOf(s));
+                        }
+
+                        for (String itemtype : plugin.cfManager.getRewardsConfig().getStringList("killstreak." + s + ".removeitems")) {
+                            for (ItemStack i : killer.getInventory().getContents()) {
+                                if (i != null) {
+                                    if (i.getType() == Material.valueOf(itemtype)) {
+                                        killer.getInventory().removeItem(i);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        for (String kit : plugin.cfManager.getRewardsConfig().getStringList("killstreak." + s + ".givekits")) {
+                            plugin.itemman.giveKit(killer, kit);
+                        }
+
                         this.tryBroadcastStreak(killer, Integer.valueOf(s), killstreak);
-                        toreturn = true;
                     }
                 }
             }
         }
-        return toreturn;
     }
 
     /**
@@ -81,25 +133,28 @@ public class RewardsManager {
     }
 
     /**
-     * Rewards a player there reward needed (ADVANCED)
+     * Rewards a player there cash reward needed (ADVANCED)
      *
      * @param killer
      * @param killstreak
      */
-    private void rewardPlayer(Player killer, int killstreakValue) {
+    private void rewardPlayerCash(Player killer, int killstreakValue) {
         String groupname = FreeForAll.permission.getPrimaryGroup(killer);
         long defaultamount = plugin.cfManager.getRewardsConfig().getLong("killstreak." + killstreakValue + ".defaultcash");
 
         if (groupname == null) {
             plugin.pmanager.giveMoney(killer, defaultamount);
+            killer.sendMessage(plugin.messageman.getPrefix() + " " + plugin.messages.get(MessageType.CASHREWARD).replaceAll("CASH", String.valueOf(defaultamount)).replaceAll("RANK", "defaultcash"));
             return;
         }
         long amount2give = plugin.cfManager.getRewardsConfig().getLong("killstreak." + killstreakValue + ".ranks." + groupname);
 
         if (amount2give != 0) {
             plugin.pmanager.giveMoney(killer, amount2give);
+            killer.sendMessage(plugin.messageman.getPrefix() + " " + plugin.messages.get(MessageType.CASHREWARD).replaceAll("CASH", String.valueOf(amount2give)).replaceAll("RANK", groupname));
         } else {
             plugin.pmanager.giveMoney(killer, defaultamount);
+            killer.sendMessage(plugin.messageman.getPrefix() + " " + plugin.messages.get(MessageType.CASHREWARD).replaceAll("CASH", String.valueOf(defaultamount)).replaceAll("RANK", "defaultcash"));
         }
     }
 }

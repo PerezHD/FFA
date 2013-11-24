@@ -3,10 +3,19 @@
 # Kits to give when they first join FFA
 joinkits:
 - food
+- iron
 #
 # Define kits
 kit:
   food:
   - '282:10'
-  irontools:
-  - '282:10'
+  iron:
+  - '267:1'
+  - '258:1'
+  - '306:1'
+  - '307:1'
+  - '308:1'
+  - '309:1'
+  diamond:
+  - '276:1'
+  - '279:1'
