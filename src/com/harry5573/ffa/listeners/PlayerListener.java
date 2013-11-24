@@ -115,59 +115,81 @@ public class PlayerListener implements Listener {
             p.updateInventory();
         }
     }
-    
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onMove(PlayerMoveEvent event) {
         Player p = event.getPlayer();
 
-        if (plugin.warmupTasks.containsKey(p)) {
-            if ((event.getFrom().getBlockX() != event.getTo().getBlockX()) || (event.getFrom().getBlockZ() != event.getTo().getBlockZ())) {
+        if ((event.getFrom().getBlockX() != event.getTo().getBlockX()) || (event.getFrom().getBlockZ() != event.getTo().getBlockZ())) {
+            
+            if (plugin.warmupTasks.containsKey(p)) {
                 Bukkit.getScheduler().cancelTask(plugin.warmupTasks.get(p));
-                
+
                 plugin.warmupTasks.remove(p);
                 plugin.playerInFFA.remove(p);
-                
+
                 event.getPlayer().sendMessage(plugin.messageman.getPrefix() + ChatColor.RED + " Teleport cancelled due to player movement.");
             }
-        }
 
-        Region region = plugin.regionman.getFFARegion();
-        Vector pt = LocationTools.toVector(event.getTo());
-        Vector pf = LocationTools.toVector(event.getFrom());
+            Region region = plugin.regionman.getFFARegion();
+            Vector pt = LocationTools.toVector(event.getTo());
+            Vector pf = LocationTools.toVector(event.getFrom());
 
-        World world = p.getWorld();
-        if (region.contains(world, pt) && !region.contains(world, pf)) {
-            //If they enter
-            p.sendMessage(plugin.messageman.getPrefix() + ChatColor.GOLD + " It seems you enterd the ffa region... Adding you to FFA");
-            plugin.pmanager.joinFFA(p);
-        } else if (!region.contains(world, pt) && region.contains(world, pf)) {
-            //If they leave
-            p.sendMessage(plugin.messageman.getPrefix() + ChatColor.GOLD + " It seems you left the ffa region... Removing you from FFA");
-            plugin.pmanager.removeFromFFA(p, true);
+            World world = p.getWorld();
+            if (region.contains(world, pt) && !region.contains(world, pf)) {
+                //If they enter
+                p.sendMessage(plugin.messageman.getPrefix() + ChatColor.GOLD + " It seems you enterd the ffa region... Adding you to FFA");
+                plugin.pmanager.joinFFA(p);
+            } else if (!region.contains(world, pt) && region.contains(world, pf)) {
+                //If they leave
+                p.sendMessage(plugin.messageman.getPrefix() + ChatColor.GOLD + " It seems you left the ffa region... Removing you from FFA");
+                plugin.pmanager.removeFromFFA(p, true);
+            }
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onFFAQuit(PlayerQuitEvent event) {
         Player p = event.getPlayer();
-        if (plugin.playerInFFA.contains(p)) {
+        if (plugin.playerKillstreak.containsKey(p)) {
             plugin.pmanager.removeFromFFA(p, false);
+        }
+
+        if (plugin.warmupTasks.containsKey(p)) {
+            Bukkit.getScheduler().cancelTask(plugin.warmupTasks.get(p));
+
+            plugin.warmupTasks.remove(p);
+            plugin.playerInFFA.remove(p);
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onKick(PlayerKickEvent event) {
         Player p = event.getPlayer();
-        if (plugin.playerInFFA.contains(p)) {
+        if (plugin.playerKillstreak.containsKey(p)) {
             plugin.pmanager.removeFromFFA(p, false);
+        }
+
+        if (plugin.warmupTasks.containsKey(p)) {
+            Bukkit.getScheduler().cancelTask(plugin.warmupTasks.get(p));
+
+            plugin.warmupTasks.remove(p);
+            plugin.playerInFFA.remove(p);
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void respawn(PlayerRespawnEvent event) {
         Player p = event.getPlayer();
-        if (plugin.playerInFFA.contains(p)) {
+        if (plugin.playerKillstreak.containsKey(p)) {
             plugin.pmanager.removeFromFFA(p, true);
+        }
+
+        if (plugin.warmupTasks.containsKey(p)) {
+            Bukkit.getScheduler().cancelTask(plugin.warmupTasks.get(p));
+
+            plugin.warmupTasks.remove(p);
+            plugin.playerInFFA.remove(p);
         }
     }
 

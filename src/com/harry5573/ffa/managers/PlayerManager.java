@@ -121,7 +121,14 @@ public class PlayerManager {
      * @param online
      */
     public void removeFromFFA(Player p, boolean online) {
-        if (!plugin.playerInFFA.contains(p)) {
+        if (plugin.warmupTasks.containsKey(p)) {
+            Bukkit.getScheduler().cancelTask(plugin.warmupTasks.get(p));
+
+            plugin.warmupTasks.remove(p);
+            plugin.playerInFFA.remove(p);
+        }
+
+        if (!plugin.playerKillstreak.containsKey(p)) {
             return;
         }
 
