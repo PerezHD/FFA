@@ -1,0 +1,12 @@
+# Items configuration for ffa
+#
+# Kits to give when they first join FFA
+joinkits:
+- food
+#
+# Define kits
+kit:
+  food:
+  - '282:10'
+  irontools:
+  - '282:10'

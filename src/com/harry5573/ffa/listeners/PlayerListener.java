@@ -44,7 +44,7 @@ import org.bukkit.util.Vector;
  */
 public class PlayerListener implements Listener {
 
-    public static FreeForAll plugin;
+    FreeForAll plugin;
 
     public PlayerListener(FreeForAll instance) {
         this.plugin = instance;
@@ -67,11 +67,10 @@ public class PlayerListener implements Listener {
             p.sendMessage(plugin.messageman.getPrefix() + ChatColor.GREEN + " You may not place blocks in ffa.");
         }
     }
-   
-@EventHandler(priority = EventPriority.LOWEST)
+
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player p = event.getPlayer();
-        
         if (plugin.playerInFFA.contains(p)) {
             p.sendMessage(plugin.messageman.getPrefix() + ChatColor.RED + " You can't use commands while in FFA!");
             event.setCancelled(true);
@@ -179,15 +178,7 @@ public class PlayerListener implements Listener {
         if (plugin.playerInFFA.contains(player)) {
             if (event.getSlotType() == InventoryType.SlotType.ARMOR) {
                 event.setCancelled(true);
-                player.sendMessage(plugin.messageman.getPrefix() + ChatColor.GREEN + " You cant remove your armour in FFA");
-            }
-            if (event.getSlot() == 0) {
-                event.setCancelled(true);
-                player.sendMessage(plugin.messageman.getPrefix() + ChatColor.GREEN + " You cant move your sword/axe in FFA");
-            }
-            if (event.getSlot() == 1) {
-                event.setCancelled(true);
-                player.sendMessage(plugin.messageman.getPrefix() + ChatColor.GREEN + " You cant move your sword/axe in FFA");
+                player.sendMessage(plugin.messageman.getPrefix() + ChatColor.GREEN + " You cant remove your armor in FFA");
             }
         }
     }
@@ -259,16 +250,12 @@ public class PlayerListener implements Listener {
     public void onItem(PlayerKillPlayerInFFAEvent e) {
         Player p = e.getPlayer();
         int ks = e.getKillStreak();
-        
+
         for (Player inFFA : plugin.playerInFFA) {
             plugin.pmanager.updateScoreboard(inFFA);
         }
 
-        if (plugin.rewardman.tryReward(p, ks)) {
-            if (plugin.getConfig().getBoolean("broadcast.killstreak")) {
-                Bukkit.broadcastMessage(plugin.messageman.getPrefix() + " " + plugin.messages.get(MessageManager.MessageType.BROADCASTKILLSTREAK).replaceAll("PLAYER", p.getName()).replaceAll("KS", String.valueOf(ks)));
-            }
-        }
+        plugin.rewardman.tryReward(p, ks);
 
         plugin.ih.giveFood(p);
     }

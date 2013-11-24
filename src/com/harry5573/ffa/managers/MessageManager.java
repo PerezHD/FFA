@@ -31,7 +31,7 @@ public class MessageManager {
     }
     
     public enum MessageType {
-        PREFIX, MONEYGIVE, WARMUP, BROADCASTJOIN, BROADCASTKILLSTREAK, THANKS, PREJOIN, OLDSAVE
+        PREFIX, MONEYGIVE, WARMUP, BROADCASTJOIN, BROADCASTKILLSTREAK, THANKS, PREJOIN, OLDSAVE, KITGIVE
     }
     
     /**
@@ -46,6 +46,7 @@ public class MessageManager {
         plugin.messages.put(MessageType.THANKS, MessageUtil.translateToColorCode(plugin.cfManager.getMessagesConfig().getString("messages.thanks")));
         plugin.messages.put(MessageType.PREJOIN, MessageUtil.translateToColorCode(plugin.cfManager.getMessagesConfig().getString("messages.prejoin")));
         plugin.messages.put(MessageType.OLDSAVE, MessageUtil.translateToColorCode(plugin.cfManager.getMessagesConfig().getString("messages.oldsave")));
+        plugin.messages.put(MessageType.KITGIVE, MessageUtil.translateToColorCode(plugin.cfManager.getMessagesConfig().getString("messages.kitgive")));
     }
 
     /**

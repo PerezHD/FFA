@@ -7,7 +7,6 @@ teleportdelay: 5
 # Should we broadcast when
 broadcast:
   join: true
-  killstreak: true
   
 # SpawnWorld: World that the FFA arena is located in (Auto set on setspawn)
 ffaworld: world

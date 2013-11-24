@@ -22,6 +22,7 @@ import com.harry5573.ffa.listeners.PlayerListener;
 import com.harry5573.ffa.handlers.ItemHandler;
 import com.harry5573.ffa.managers.ConfigManager;
 import com.harry5573.ffa.managers.GameManager;
+import com.harry5573.ffa.managers.ItemManager;
 import com.harry5573.ffa.managers.MessageManager;
 import com.harry5573.ffa.managers.MessageManager.MessageType;
 import com.harry5573.ffa.managers.PlayerManager;
@@ -37,6 +38,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class FreeForAll extends JavaPlugin implements Listener {
 
@@ -60,7 +62,6 @@ public class FreeForAll extends JavaPlugin implements Listener {
     public HashMap<Player, ItemStack> playerCursorStore = new HashMap();
     public HashMap<Player, Integer> playerKillstreak = new HashMap();
     public HashMap<Player, Float> playerExp = new HashMap();
-    public HashMap<Player, Collection<PotionEffect>> playerPotions = new HashMap();
     
     /**
      * Players in ffa
@@ -94,6 +95,7 @@ public class FreeForAll extends JavaPlugin implements Listener {
     public MessageManager messageman;
     public RewardsManager rewardman;
     public GameManager gameman;
+    public ItemManager itemman;
     
     /**
      * Vault stuff
@@ -125,6 +127,7 @@ public class FreeForAll extends JavaPlugin implements Listener {
         this.spawnman = new SpawnManager(this);
         this.rewardman = new RewardsManager(this);
         this.gameman = new GameManager(this);
+        this.itemman = new ItemManager(this);
 
         PluginManager pm = getServer().getPluginManager();
         

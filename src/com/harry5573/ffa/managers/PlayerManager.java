@@ -21,6 +21,7 @@ import com.harry5573.ffa.api.PlayersInFFAChangeEvent;
 import com.harry5573.ffa.managers.MessageManager.MessageType;
 import com.harry5573.ffa.task.WarmupTask;
 import com.harry5573.ffa.utilitys.MessageUtil;
+import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -76,21 +77,25 @@ public class PlayerManager {
         
         p.sendMessage(plugin.messageman.getPrefix() + " " + plugin.messages.get(MessageType.OLDSAVE));
         this.teleportPlayerToRandomLocation(p);
+
         this.savePlayerToInternalStorage(p);
         
+        for (PotionEffect pf : p.getActivePotionEffects()) {
+            p.removePotionEffect(pf.getType());
+        }
+
         p.getInventory().clear();
         p.getInventory().setArmorContents(null);
 
         p.setAllowFlight(false);
         p.setFlying(false);
         p.setGameMode(GameMode.SURVIVAL);
-        
-        plugin.ih.giveItems(p);
-        plugin.ih.giveFood(p);
+
+        plugin.itemman.givePlayerStarterKits(p);
 
         plugin.playerKillstreak.put(p, 0);
         plugin.warmupTasks.remove(p);
-                
+
         this.updateScoreboard(p);
         
         if (plugin.getConfig().getBoolean("broadcast.join")) {
@@ -107,6 +112,8 @@ public class PlayerManager {
 
         PlayersInFFAChangeEvent changeevent = new PlayersInFFAChangeEvent(plugin.gameman.getAmountPlayersInFFA());
         Bukkit.getServer().getPluginManager().callEvent(changeevent);
+        
+        p.updateInventory();
     }
 
     /**
@@ -150,15 +157,21 @@ public class PlayerManager {
      *
      * @param p
      */
-    public void savePlayerToInternalStorage(Player p) {
+    public boolean savePlayerToInternalStorage(Player p) {
         plugin.playerInventoryContents.put(p, p.getInventory().getContents());
         plugin.playerArmorContents.put(p, p.getInventory().getArmorContents());
         plugin.playerExp.put(p, p.getExp());
-        plugin.playerPotions.put(p, p.getActivePotionEffects());
         
+        HashMap<PotionEffectType, Integer> pots = new HashMap();
+        
+        for (PotionEffect pf : p.getActivePotionEffects()) {
+            pots.put(pf.getType(), pf.getAmplifier());
+        }
+
         if (p.getItemOnCursor() != null) {
             plugin.playerCursorStore.put(p, p.getItemOnCursor());
         }
+        return true;
     }
 
     /**
@@ -172,10 +185,6 @@ public class PlayerManager {
         p.getInventory().setArmorContents((ItemStack[]) plugin.playerArmorContents.get(p));
         p.setExp(plugin.playerExp.get(p));
         
-        for (PotionEffect pf : plugin.playerPotions.get(p)) {
-            p.addPotionEffect(pf);
-        }
-        
         if (plugin.playerCursorStore.containsKey(p)) {
             p.getInventory().addItem(plugin.playerCursorStore.get(p));
         }
@@ -183,7 +192,6 @@ public class PlayerManager {
         plugin.playerInventoryContents.remove(p);
         plugin.playerArmorContents.remove(p);
         plugin.playerExp.remove(p);
-        plugin.playerPotions.remove(p);
         plugin.playerCursorStore.remove(p);
     }
 

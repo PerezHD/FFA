@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 package com.harry5573.ffa.managers;
 
 import com.harry5573.ffa.FreeForAll;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -30,9 +31,10 @@ public class RewardsManager {
     public RewardsManager(FreeForAll instance) {
         this.plugin = instance;
     }
-    
+
     /**
      * Simple method to determine if we need to reward or not
+     *
      * @param killstreak
      * @return
      */
@@ -45,6 +47,7 @@ public class RewardsManager {
             //If its exact then we reward them straight away
             if (killstreak == Integer.valueOf(s)) {
                 this.rewardPlayer(killer, killstreak);
+                this.tryBroadcastStreak(killer, Integer.valueOf(s), killstreak);
                 toreturn = true;
             } else {
                 //Otherwise if we dont give it to them as its not exact we still check if its infinite then round it if its works then BOOM
@@ -54,12 +57,27 @@ public class RewardsManager {
 
                     if (value == Math.round(value)) {
                         this.rewardPlayer(killer, Integer.valueOf(s));
+                        this.tryBroadcastStreak(killer, Integer.valueOf(s), killstreak);
                         toreturn = true;
                     }
                 }
             }
         }
         return toreturn;
+    }
+
+    /**
+     * Broadcasts a killstreak
+     *
+     * @param killer
+     * @param killstreakValue
+     */
+    public boolean tryBroadcastStreak(Player killer, int killstreakValue, int killstreak) {
+        if (plugin.cfManager.getRewardsConfig().getBoolean("killstreak." + killstreakValue + ".broadcast")) {
+            Bukkit.broadcastMessage(plugin.messageman.getPrefix() + " " + plugin.messages.get(MessageManager.MessageType.BROADCASTKILLSTREAK).replaceAll("PLAYER", killer.getName()).replaceAll("KS", String.valueOf(killstreak)));
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -5,12 +5,14 @@ killstreak:
   '3':
     defaultcash: 100
     infinite: true
+    broadcast: true
     ranks:
       a: 10000
       b: 10000
   '6':
-    defaultcash: '000
+    defaultcash: 000
     infinite: false
+    broadcast: true
     ranks:
       a: 100000
       b: 100000

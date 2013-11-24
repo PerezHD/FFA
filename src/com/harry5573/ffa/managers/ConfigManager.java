@@ -33,6 +33,9 @@ public class ConfigManager {
     
     private FileConfiguration rewardsConfig = null;
     private File rewardsConfigFile = null;
+    
+    private FileConfiguration itemsConfig = null;
+    private File itemsConfigFile = null;
 
     public ConfigManager(FreeForAll instance) {
         this.plugin = instance;
@@ -52,6 +55,10 @@ public class ConfigManager {
             rewardsConfigFile = new File(plugin.getDataFolder(), "rewards.yml");
         }
 
+        if (itemsConfigFile == null) {
+            itemsConfigFile = new File(plugin.getDataFolder(), "items.yml");
+        }
+
         if (!messagesConfigFile.exists()) {
             plugin.saveResource("messages.yml", false);
         }
@@ -60,8 +67,13 @@ public class ConfigManager {
             plugin.saveResource("rewards.yml", false);
         }
 
+        if (!itemsConfigFile.exists()) {
+            plugin.saveResource("items.yml", false);
+        }
+
         rewardsConfig = YamlConfiguration.loadConfiguration(rewardsConfigFile);
         messagesConfig = YamlConfiguration.loadConfiguration(messagesConfigFile);
+        itemsConfig = YamlConfiguration.loadConfiguration(itemsConfigFile);
     }
 
     /**
@@ -72,6 +84,7 @@ public class ConfigManager {
         
         rewardsConfig = YamlConfiguration.loadConfiguration(rewardsConfigFile);
         messagesConfig = YamlConfiguration.loadConfiguration(messagesConfigFile);
+        itemsConfig = YamlConfiguration.loadConfiguration(itemsConfigFile);
     }
     
     /**
@@ -88,5 +101,13 @@ public class ConfigManager {
      */
     public FileConfiguration getRewardsConfig() {
         return this.rewardsConfig;
+    }
+
+    /**
+     * Returns the FileConfiguration of the rewards config
+     * @return 
+     */
+    public FileConfiguration getItemsConfig() {
+        return this.itemsConfig;
     }
 }
