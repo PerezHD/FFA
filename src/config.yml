@@ -1,38 +1,22 @@
 # FreeForAll By Harry5573
 # Configuration
-#
-# Is the plugin enabled?
-enabled: false
-#
-# The time in seconds before the player gets teleported to the ffa arena
-teleportdelay: 5
-#
-# Should we broadcast when
+enabled: true
+teleportdelay: 3
 broadcast:
   join: true
-#
-# SpawnWorld: World that the FFA arena is located in (Auto set on setspawn)
 ffaworld: world
-#
-# Spawn: Spawns will be randomly picked from here
 spawns:
   '1':
     x: 1
     y: 4
     z: 1
     yaw: 1
-#    
-# FFA Effect
 effect:
   joinblind: true
   joinsound: true
   killsound: true
-#
-# Scoreboard options
 scoreboard:
-  title: '&cFFA Info'
-#
-# Safety region options
+  title: '&c&lF&7&lF&c&lA'
 region:
   world: world
   p1:

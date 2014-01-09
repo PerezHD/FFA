@@ -1,7 +1,7 @@
 # FreeForAll by harry5573 message configuration
 # Here you can customise all of your messages!
 messages:
-  prefix: '&7[&cFFA&7]:'
+  prefix: '&8[&cFreeFor&eAll&8]:'
   moneygive: '&a$MONEY &dhas been added to your account.'
   warmup: '&7Joining the &cFFA &7arena in &aTIME &7seconds.'
   broadcastjoin: '&cPLAYER &3has joined &6FFA&3! Go stop him/her! &b/ffa join'

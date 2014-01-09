@@ -18,19 +18,47 @@ killstreak:
     removeitems:
     - 'IRON_SWORD'
     - 'IRON_AXE'
+  '2':
+    infinite: false
+    broadcast: false
+    givecash: false
+    givekits:
+    - 'bow'
   '3':
     infinite: true
     broadcast: true
     givecash: true
     defaultcash: 100
     ranks:
-      a: 10000
-      b: 10000
-  '6':
-    infinite: true
+      Harry5573: 1000
+      B: 150
+      C: 200
+      Juvenile: 250
+      Inmate: 300
+      Snitch: 350
+      Smuggler: 500
+      Survivalist: 1000
+      Veteran: 5000
+      Elitist: 10000
+      Fallen: 30000
+      Determined: 50000
+      Brawler: 100000
+      EscapeArtist: 500000
+      ares: 1750000
+      champion: 2500000
+      olympian: 3500000
+      volcanic: 5000000
+      glacial: 7000000
+      unicorns: 9000000
+      Liger: 11000000
+      angelic: 13000000
+      Titan: 18000000
+      Immortal: 30000000
+      Spartan: 40000000
+      Tyrannical: 50000000
+  '12':
+    infinite: false
     broadcast: false
-    givecash: true
-    defaultcash: 1000
-    ranks:
-      a: 100000
-      b: 100000
+    givecash: false
+    givekits:
+    - 'iron'

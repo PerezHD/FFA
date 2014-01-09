@@ -120,31 +120,32 @@ public class PlayerListener implements Listener {
     public void onMove(PlayerMoveEvent event) {
         Player p = event.getPlayer();
 
-        if ((event.getFrom().getBlockX() != event.getTo().getBlockX()) || (event.getFrom().getBlockZ() != event.getTo().getBlockZ())) {
-            
-            if (plugin.warmupTasks.containsKey(p)) {
-                Bukkit.getScheduler().cancelTask(plugin.warmupTasks.get(p));
+        if ((event.getFrom().getBlockX() == event.getTo().getBlockX()) && (event.getFrom().getBlockZ() == event.getTo().getBlockZ())) {
+            return;
+        }
 
-                plugin.warmupTasks.remove(p);
-                plugin.playerInFFA.remove(p);
+        if (plugin.warmupTasks.containsKey(p)) {
+            Bukkit.getScheduler().cancelTask(plugin.warmupTasks.get(p));
 
-                event.getPlayer().sendMessage(plugin.messageman.getPrefix() + ChatColor.RED + " Teleport cancelled due to player movement.");
-            }
+            plugin.warmupTasks.remove(p);
+            plugin.playerInFFA.remove(p);
 
-            Region region = plugin.regionman.getFFARegion();
-            Vector pt = LocationTools.toVector(event.getTo());
-            Vector pf = LocationTools.toVector(event.getFrom());
+            event.getPlayer().sendMessage(plugin.messageman.getPrefix() + ChatColor.RED + " Teleport cancelled due to player movement.");
+        }
 
-            World world = p.getWorld();
-            if (region.contains(world, pt) && !region.contains(world, pf)) {
-                //If they enter
-                p.sendMessage(plugin.messageman.getPrefix() + ChatColor.GOLD + " It seems you enterd the ffa region... Adding you to FFA");
-                plugin.pmanager.joinFFA(p);
-            } else if (!region.contains(world, pt) && region.contains(world, pf)) {
-                //If they leave
-                p.sendMessage(plugin.messageman.getPrefix() + ChatColor.GOLD + " It seems you left the ffa region... Removing you from FFA");
-                plugin.pmanager.removeFromFFA(p, true);
-            }
+        Region region = plugin.regionman.getFFARegion();
+        Vector pt = LocationTools.toVector(event.getTo());
+        Vector pf = LocationTools.toVector(event.getFrom());
+
+        World world = p.getWorld();
+        if (region.contains(world, pt) && !region.contains(world, pf)) {
+            //If they enter
+            p.sendMessage(plugin.messageman.getPrefix() + ChatColor.GOLD + " It seems you enterd the ffa region... Adding you to FFA");
+            plugin.pmanager.joinFFA(p);
+        } else if (!region.contains(world, pt) && region.contains(world, pf)) {
+            //If they leave
+            p.sendMessage(plugin.messageman.getPrefix() + ChatColor.GOLD + " It seems you left the ffa region... Removing you from FFA");
+            plugin.pmanager.removeFromFFA(p, true);
         }
     }
 
