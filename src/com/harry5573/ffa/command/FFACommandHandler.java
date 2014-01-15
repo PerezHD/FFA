@@ -55,7 +55,7 @@ public class FFACommandHandler implements CommandExecutor {
     }
 
     private void showHelp(CommandSender sender) {
-        sender.sendMessage(ChatColor.AQUA + "___________________.[" + ChatColor.DARK_GREEN + " FreeForAll Help " + ChatColor.AQUA + "].___________________");
+        sender.sendMessage(ChatColor.AQUA + "________________.[" + ChatColor.DARK_GREEN + " FreeForAll Help " + ChatColor.AQUA + "].________________");
 
         for (FFACommand command : subCommands.values()) {
             String permission = command.getPermission();
