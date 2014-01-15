@@ -1,8 +1,10 @@
-name: FFA
-version: 10.0-SNAPSHOT
+name: FreeForAll
+version: 1.0
 description: Minecraft pvp freeforall minigame!
 main: com.harry5573.ffa.FreeForAll
 softdepend: [Vault]
+prefix: FreeForAll
+authors: [harry5573]
 commands:
   ffa: 
     description: Teleport to FFA

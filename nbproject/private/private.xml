@@ -3,7 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/devan_000/Documents/NetBeansProjects/FFA/src/messages.yml</file>
+            <file>file:/C:/Users/devan_000/Documents/NetBeansProjects/FFA/src/com/harry5573/ffa/command/FFACommandHandler.java</file>
+            <file>file:/C:/Users/devan_000/Documents/NetBeansProjects/FFA/src/config.yml</file>
+            <file>file:/C:/Users/devan_000/Documents/NetBeansProjects/FFA/src/items.yml</file>
+            <file>file:/C:/Users/devan_000/Documents/NetBeansProjects/FFA/src/com/harry5573/ffa/api/PlayerKillPlayerInFFAEvent.java</file>
+            <file>file:/C:/Users/devan_000/Documents/NetBeansProjects/FFA/src/com/harry5573/ffa/FreeForAll.java</file>
+            <file>file:/C:/Users/devan_000/Documents/NetBeansProjects/FFA/src/plugin.yml</file>
         </group>
     </open-files>
 </project-private>

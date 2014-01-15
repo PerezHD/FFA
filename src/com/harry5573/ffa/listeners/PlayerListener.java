@@ -5,7 +5,7 @@
 package com.harry5573.ffa.listeners;
 
 import com.harry5573.ffa.FreeForAll;
-import com.harry5573.ffa.api.PlayerKillPlayerInFFAEvent;
+import com.harry5573.ffa.api.PlayerInFFADeathEvent;
 import com.harry5573.ffa.api.PlayersInFFAChangeEvent;
 import com.harry5573.ffa.managers.MessageManager.MessageType;
 import com.harry5573.ffa.region.LocationTools;
@@ -50,16 +50,16 @@ public class PlayerListener implements Listener {
         this.plugin = instance;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBreak(BlockBreakEvent e) {
         Player p = e.getPlayer();
         if (plugin.playerInFFA.contains(p)) {
             e.setCancelled(true);
             p.sendMessage(plugin.messageman.getPrefix() + ChatColor.GREEN + " You may not break blocks in ffa.");
-        } 
-    } 
+        }
+    }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlace(BlockPlaceEvent e) {
         Player p = e.getPlayer();
         if (plugin.playerInFFA.contains(p)) {
@@ -68,7 +68,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player p = event.getPlayer();
         if (plugin.playerInFFA.contains(p)) {
@@ -77,7 +77,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void inventoryFFADrop(PlayerDropItemEvent event) {
         Player p = event.getPlayer();
         if (plugin.playerInFFA.contains(p)) {
@@ -87,7 +87,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onFFAOpenEvent(InventoryOpenEvent e) {
         Player p = (Player) e.getPlayer();
         if (!plugin.playerInFFA.contains(p)) {
@@ -107,7 +107,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onFFAPickupItem(PlayerPickupItemEvent event) {
         Player p = event.getPlayer();
         if (plugin.playerInFFA.contains(p)) {
@@ -116,7 +116,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
         Player p = event.getPlayer();
 
@@ -149,7 +149,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onFFAQuit(PlayerQuitEvent event) {
         Player p = event.getPlayer();
         if (plugin.playerKillstreak.containsKey(p)) {
@@ -164,7 +164,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onKick(PlayerKickEvent event) {
         Player p = event.getPlayer();
         if (plugin.playerKillstreak.containsKey(p)) {
@@ -179,7 +179,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void respawn(PlayerRespawnEvent event) {
         Player p = event.getPlayer();
         if (plugin.playerKillstreak.containsKey(p)) {
@@ -194,7 +194,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
@@ -206,10 +206,10 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerFFAInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
-        
+
         if (p.getItemInHand().getType() != Material.WOOD_SWORD) {
             return;
         }
@@ -231,7 +231,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onDeath(PlayerDeathEvent event) {
         final Player killed = event.getEntity().getPlayer();
 
@@ -259,20 +259,20 @@ public class PlayerListener implements Listener {
                 killer.playSound(killer.getLocation(), Sound.NOTE_BASS, 1F, 0);
             }
 
-            PlayerKillPlayerInFFAEvent killstreakevent = new PlayerKillPlayerInFFAEvent(killer, newstreak);
+            PlayerInFFADeathEvent killstreakevent = new PlayerInFFADeathEvent(killer, newstreak);
             Bukkit.getServer().getPluginManager().callEvent(killstreakevent);
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onChange(PlayersInFFAChangeEvent e) {
         for (Player inFFA : plugin.playerKillstreak.keySet()) {
             plugin.pmanager.updateScoreboard(inFFA);
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW)
-    public void onItem(PlayerKillPlayerInFFAEvent e) {
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onItem(PlayerInFFADeathEvent e) {
         Player p = e.getPlayer();
         int ks = e.getKillStreak();
 

@@ -30,7 +30,6 @@ import com.harry5573.ffa.managers.RegionManager;
 import com.harry5573.ffa.managers.RewardsManager;
 import com.harry5573.ffa.utilitys.SpawnData;
 import com.harry5573.ffa.managers.SpawnManager;
-import java.util.Iterator;
 import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -39,17 +38,17 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 public class FreeForAll extends JavaPlugin implements Listener {
 
     public static FreeForAll plugin;
-    
+
     /**
      * The ffa arena Region
      */
     public Region ffaregion;
-    
+
     /**
      * Warmup Task ID for player
      */
     public HashMap<Player, Integer> warmupTasks = new HashMap();
-    
+
     /**
      * Player storage
      */
@@ -58,26 +57,12 @@ public class FreeForAll extends JavaPlugin implements Listener {
     public HashMap<Player, ItemStack> playerCursorStore = new HashMap();
     public HashMap<Player, Integer> playerKillstreak = new HashMap();
     public HashMap<Player, Float> playerExp = new HashMap();
-    
-    /**
-     * Players in ffa
-     */
-    public List<Player>playerInFFA = new ArrayList<>();
-    
-    /**
-     * Regions
-     */
-    public HashMap<Player, ArrayList<Block>> inFFA = new HashMap();
-    /**
-     * Spawns
-     */
-    public HashMap<Integer, SpawnData> spawns = new HashMap();
 
-    /**
-     * Message Storage
-     */
+    public List<Player> playerInFFA = new ArrayList<>();
+    public HashMap<Player, ArrayList<Block>> inFFA = new HashMap();
+    public HashMap<Integer, SpawnData> spawns = new HashMap();
     public HashMap<MessageType, String> messages = new HashMap();
-    
+
     /**
      * Needed classes
      */
@@ -91,7 +76,7 @@ public class FreeForAll extends JavaPlugin implements Listener {
     public RewardsManager rewardman;
     public GameManager gameman;
     public ItemManager itemman;
-    
+
     /**
      * Vault stuff
      */
@@ -102,15 +87,21 @@ public class FreeForAll extends JavaPlugin implements Listener {
      * Is the plugin enabled (Joinable?)
      */
     public boolean enabled = false;
-    
+
+    private static long startupTime;
+
     @Override
     public void onEnable() {
+        startupTime = System.currentTimeMillis();
         plugin = this;
-        
-        log("Plugin version " + getVersion() + " starting!");
-        
-        this.checkDependencies();
-        
+
+        log("====[ Plugin version " + getDescription().getVersion() + " starting up ]====");
+
+        if (!checkDependencies()) {
+            shutdown();
+            return;
+        }
+
         warmupTasks.clear();
         playerInventoryContents.clear();
         playerArmorContents.clear();
@@ -129,15 +120,15 @@ public class FreeForAll extends JavaPlugin implements Listener {
         this.itemman = new ItemManager(this);
 
         PluginManager pm = getServer().getPluginManager();
-        
+
         pm.registerEvents(new PlayerListener(this), this);
 
         cfManager.load();
         messageman.load();
         spawnman.loadSpawns();
-        
+
         ffaregion = this.rus.getFFARegion();
-        
+
         if (!this.setupEconomy()) {
             this.log("No economy plugin installed! Plugin shutting down");
             this.shutdown();
@@ -152,26 +143,29 @@ public class FreeForAll extends JavaPlugin implements Listener {
 
         this.setupCommands();
 
-        log("Plugin started!");
+        log("====[ Plugin started up in " + (System.currentTimeMillis() - startupTime) + "ms ]====");
     }
 
     @Override
     public void onDisable() {
+        log("====[ Plugin shutting down ]====");
+
         for (Player p : Bukkit.getOnlinePlayers()) {
             pmanager.removeFromFFA(p, true);
         }
-        log("Plugin stopped safely!");
+
         saveConfig();
+
+        log("====[ Plugin shut down! ]====");
     }
-    
+
     /**
      * Sets up commands
-     * @return 
      */
     public void setupCommands() {
         FFACommandHandler handler = new FFACommandHandler(this);
-        this.getCommand("ffa").setExecutor(handler);
-        //Then we register the rest
+        getCommand("ffa").setExecutor(handler);
+
         handler.registerCommand("join", new CommandJoin(this));
         handler.registerCommand("enable", new CommandEnable(this));
         handler.registerCommand("reload", new CommandReload(this));
@@ -182,23 +176,27 @@ public class FreeForAll extends JavaPlugin implements Listener {
 
     /**
      * Checks that all the needed dependencies are installed on the server
+     *
+     * @return
      */
-    public void checkDependencies() {
+    public boolean checkDependencies() {
         PluginManager pm = this.getServer().getPluginManager();
-        for (Iterator<String> it = this.getDescription().getSoftDepend().iterator(); it.hasNext();) {
-            String plugin = it.next();
-            if (pm.getPlugin(plugin) == null) {
-                this.log("Could not find dependencie " + plugin + " plugin shutting down!");
-                this.shutdown();
+        for (String pluginName : this.getDescription().getSoftDepend()) {
+            if (pm.getPlugin(pluginName) == null) {
+                this.log("Could not find dependencie " + pluginName + " shutting down!");
+                return false;
             } else {
-                this.log("Registered Dependencie " + plugin + "!");
+                this.log("Registered Dependencie " + pluginName + "!");
             }
         }
+        return true;
     }
 
     /**
-     * Vault method to check that we have an economy plugin installed on the server
-     * @return 
+     * Vault method to check that we have an economy plugin installed on the
+     * server
+     *
+     * @return
      */
     private boolean setupEconomy() {
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
@@ -208,7 +206,7 @@ public class FreeForAll extends JavaPlugin implements Listener {
         econ = rsp.getProvider();
         return econ != null;
     }
-    
+
     /**
      * Vault method to check that we have a permission plugin installed
      */
@@ -226,18 +224,11 @@ public class FreeForAll extends JavaPlugin implements Listener {
     public void shutdown() {
         Bukkit.getServer().getPluginManager().disablePlugin(this);
     }
-    
-    /**
-     * Returns the version of the plugin
-     * @return 
-     */
-    public String getVersion() {
-        return this.getDescription().getVersion();
-    }
-    
+
     /**
      * Logs a message to the server log/console
-     * @param msg 
+     *
+     * @param msg
      */
     public void log(String msg) {
         this.getLogger().info(msg);
