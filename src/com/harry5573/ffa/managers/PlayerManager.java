@@ -1,18 +1,17 @@
 /*Copyright (C) Harry5573 2013-14
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
-
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 package com.harry5573.ffa.managers;
 
 import com.harry5573.ffa.FreeForAll;
@@ -30,7 +29,6 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -42,16 +40,17 @@ import org.bukkit.scoreboard.ScoreboardManager;
  * @author Harry5573
  */
 public class PlayerManager {
-    
+
     FreeForAll plugin;
-    
+
     public PlayerManager(FreeForAll instance) {
         this.plugin = instance;
     }
-    
+
     /**
      * Call this when we want a player to begin the process of joining ffa
-     * @param p 
+     *
+     * @param p
      */
     public void joinFFA(final Player p) {
         plugin.playerInFFA.add(p);
@@ -61,24 +60,30 @@ public class PlayerManager {
             p.setGameMode(GameMode.SURVIVAL);
         }
 
-        BukkitTask thread = new WarmupTask(p, plugin, plugin.getConfig().getInt("teleportdelay")).runTaskTimer(plugin, 0L, 20L);
-        plugin.warmupTasks.put(p, thread.getTaskId());
+        WarmupTask.warmupPlayers.put(p, plugin.getConfig().getInt("teleportdelay"));
     }
 
     /**
      * Should be called after the warmup process
-     * @param p 
+     *
+     * @param p
      */
     public void joinFFAAfterTimer(final Player p) {
+        WarmupTask.warmupPlayers.remove(p);
+
+        if (p == null || !p.isOnline()) {
+            return;
+        }
+
         if (p.getOpenInventory() != null) {
             p.getOpenInventory().close();
         }
-        
+
         p.sendMessage(plugin.messageman.getPrefix() + " " + plugin.messages.get(MessageType.OLDSAVE));
         this.teleportPlayerToRandomLocation(p);
 
         this.savePlayerToInternalStorage(p);
-        
+
         for (PotionEffect pf : p.getActivePotionEffects()) {
             p.removePotionEffect(pf.getType());
         }
@@ -91,7 +96,6 @@ public class PlayerManager {
         p.setGameMode(GameMode.SURVIVAL);
 
         plugin.playerKillstreak.put(p, 0);
-        plugin.warmupTasks.remove(p);
 
         plugin.itemman.givePlayerStarterKits(p);
 
@@ -109,22 +113,18 @@ public class PlayerManager {
             p.playSound(p.getLocation(), Sound.LEVEL_UP, 1F, 0);
         }
 
-        PlayersInFFAChangeEvent changeevent = new PlayersInFFAChangeEvent(plugin.gameman.getAmountPlayersInFFA());
-        Bukkit.getServer().getPluginManager().callEvent(changeevent);
+        plugin.getServer().getPluginManager().callEvent(new PlayersInFFAChangeEvent(plugin.gameman.getAmountPlayersInFFA()));
     }
 
     /**
      * Removes a player from FFA
      *
      * @param p
-     * @param alive
      * @param online
      */
     public void removeFromFFA(Player p, boolean online) {
-        if (plugin.warmupTasks.containsKey(p)) {
-            Bukkit.getScheduler().cancelTask(plugin.warmupTasks.get(p));
-
-            plugin.warmupTasks.remove(p);
+        if (WarmupTask.warmupPlayers.containsKey(p)) {
+            WarmupTask.warmupPlayers.remove(p);
             plugin.playerInFFA.remove(p);
         }
 
@@ -151,7 +151,7 @@ public class PlayerManager {
         }
 
         this.restorePlayerFromInternalStore(p);
-        
+
         PlayersInFFAChangeEvent changeevent = new PlayersInFFAChangeEvent(plugin.gameman.getAmountPlayersInFFA());
         Bukkit.getServer().getPluginManager().callEvent(changeevent);
     }
@@ -160,14 +160,15 @@ public class PlayerManager {
      * Stores a players stuff in internal storage
      *
      * @param p
+     * @return
      */
     public boolean savePlayerToInternalStorage(Player p) {
         plugin.playerInventoryContents.put(p, p.getInventory().getContents());
         plugin.playerArmorContents.put(p, p.getInventory().getArmorContents());
         plugin.playerExp.put(p, p.getExp());
-        
+
         HashMap<PotionEffectType, Integer> pots = new HashMap();
-        
+
         for (PotionEffect pf : p.getActivePotionEffects()) {
             pots.put(pf.getType(), pf.getAmplifier());
         }
@@ -182,17 +183,16 @@ public class PlayerManager {
      * Restores a player after being in FFA
      *
      * @param p
-     * @param teleport
      */
     public void restorePlayerFromInternalStore(final Player p) {
         p.getInventory().setContents((ItemStack[]) plugin.playerInventoryContents.get(p));
         p.getInventory().setArmorContents((ItemStack[]) plugin.playerArmorContents.get(p));
         p.setExp(plugin.playerExp.get(p));
-        
+
         if (plugin.playerCursorStore.containsKey(p)) {
             p.getInventory().addItem(plugin.playerCursorStore.get(p));
         }
-        
+
         plugin.playerInventoryContents.remove(p);
         plugin.playerArmorContents.remove(p);
         plugin.playerExp.remove(p);
@@ -210,44 +210,45 @@ public class PlayerManager {
 
     /**
      * Gives a player money via VAULT
+     *
      * @param p
-     * @param amount 
+     * @param amount
      */
     public void giveMoney(Player p, double amount) {
         p.sendMessage(plugin.messages.get(MessageType.MONEYGIVE).replaceAll("MONEY", String.valueOf(Integer.valueOf((int) amount))));
         FreeForAll.econ.depositPlayer(p.getName(), amount);
     }
-    
+
     /**
      * Tells us if a player is in FFA
+     *
      * @param p
-     * @return 
+     * @return
      */
     public boolean playerIsInFFA(Player p) {
-        if (plugin.playerInFFA.contains(p)) {
-            return true;
-        }
-        return false;
+        return plugin.playerInFFA.contains(p);
     }
-    
+
     /**
      * Returns a players killstreak if they are in FFA
+     *
      * @param p
-     * @return 
+     * @return
      */
     public int getPlayerKillstreak(Player p) {
         int amt = plugin.playerKillstreak.get(p);
-        
+
         if (amt != 0) {
             return amt;
         }
-        
+
         return 0;
     }
- 
+
     /**
      * Sets the players scoreboard to whatever we want!
-     * @param p 
+     *
+     * @param p
      */
     public void updateScoreboard(Player p) {
         ScoreboardManager scoreboardManager = plugin.getServer().getScoreboardManager();
@@ -263,22 +264,24 @@ public class PlayerManager {
 
         Score killstreak = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.GOLD + "Killstreak:"));
         killstreak.setScore(this.getPlayerKillstreak(p));
-        
+
         p.setScoreboard(scoreboard);
     }
 
     /**
      * Removes a players scoreboard after FFA
-     * @param p 
+     *
+     * @param p
      */
     public void removeScoreboard(Player p) {
         ScoreboardManager scoreboardManager = plugin.getServer().getScoreboardManager();
         p.setScoreboard(scoreboardManager.getNewScoreboard());
     }
-    
+
     /**
      * Sends a message to all players in FFA
-     * @param msg 
+     *
+     * @param msg
      */
     public void messageAllPlayersInFFA(String msg) {
         for (Player p : plugin.playerInFFA) {

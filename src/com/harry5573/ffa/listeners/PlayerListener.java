@@ -11,6 +11,7 @@ import com.harry5573.ffa.managers.MessageManager.MessageType;
 import com.harry5573.ffa.region.LocationTools;
 import com.harry5573.ffa.region.Region;
 import com.harry5573.ffa.region.Selection;
+import com.harry5573.ffa.task.WarmupTask;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -124,10 +125,8 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        if (plugin.warmupTasks.containsKey(p)) {
-            Bukkit.getScheduler().cancelTask(plugin.warmupTasks.get(p));
-
-            plugin.warmupTasks.remove(p);
+        if (WarmupTask.warmupPlayers.containsKey(p)) {
+            WarmupTask.warmupPlayers.remove(p);
             plugin.playerInFFA.remove(p);
 
             event.getPlayer().sendMessage(plugin.messageman.getPrefix() + ChatColor.RED + " Teleport cancelled due to player movement.");
@@ -156,10 +155,8 @@ public class PlayerListener implements Listener {
             plugin.pmanager.removeFromFFA(p, false);
         }
 
-        if (plugin.warmupTasks.containsKey(p)) {
-            Bukkit.getScheduler().cancelTask(plugin.warmupTasks.get(p));
-
-            plugin.warmupTasks.remove(p);
+        if (WarmupTask.warmupPlayers.containsKey(p)) {
+            WarmupTask.warmupPlayers.remove(p);
             plugin.playerInFFA.remove(p);
         }
     }
@@ -171,10 +168,8 @@ public class PlayerListener implements Listener {
             plugin.pmanager.removeFromFFA(p, false);
         }
 
-        if (plugin.warmupTasks.containsKey(p)) {
-            Bukkit.getScheduler().cancelTask(plugin.warmupTasks.get(p));
-
-            plugin.warmupTasks.remove(p);
+        if (WarmupTask.warmupPlayers.containsKey(p)) {
+            WarmupTask.warmupPlayers.remove(p);
             plugin.playerInFFA.remove(p);
         }
     }
@@ -186,10 +181,8 @@ public class PlayerListener implements Listener {
             plugin.pmanager.removeFromFFA(p, true);
         }
 
-        if (plugin.warmupTasks.containsKey(p)) {
-            Bukkit.getScheduler().cancelTask(plugin.warmupTasks.get(p));
-
-            plugin.warmupTasks.remove(p);
+        if (WarmupTask.warmupPlayers.containsKey(p)) {
+            WarmupTask.warmupPlayers.remove(p);
             plugin.playerInFFA.remove(p);
         }
     }

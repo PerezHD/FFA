@@ -8,7 +8,6 @@ import com.harry5573.ffa.command.CommandSetSpawn;
 import com.harry5573.ffa.command.CommandEnable;
 import com.harry5573.ffa.command.FFACommandHandler;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -30,7 +29,9 @@ import com.harry5573.ffa.managers.RegionManager;
 import com.harry5573.ffa.managers.RewardsManager;
 import com.harry5573.ffa.utilitys.SpawnData;
 import com.harry5573.ffa.managers.SpawnManager;
+import com.harry5573.ffa.task.WarmupTask;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -45,23 +46,18 @@ public class FreeForAll extends JavaPlugin implements Listener {
     public Region ffaregion;
 
     /**
-     * Warmup Task ID for player
-     */
-    public HashMap<Player, Integer> warmupTasks = new HashMap();
-
-    /**
      * Player storage
      */
-    public HashMap<Player, ItemStack[]> playerInventoryContents = new HashMap();
-    public HashMap<Player, ItemStack[]> playerArmorContents = new HashMap();
-    public HashMap<Player, ItemStack> playerCursorStore = new HashMap();
-    public HashMap<Player, Integer> playerKillstreak = new HashMap();
-    public HashMap<Player, Float> playerExp = new HashMap();
+    public ConcurrentHashMap<Player, ItemStack[]> playerInventoryContents = new ConcurrentHashMap();
+    public ConcurrentHashMap<Player, ItemStack[]> playerArmorContents = new ConcurrentHashMap();
+    public ConcurrentHashMap<Player, ItemStack> playerCursorStore = new ConcurrentHashMap();
+    public ConcurrentHashMap<Player, Integer> playerKillstreak = new ConcurrentHashMap();
+    public ConcurrentHashMap<Player, Float> playerExp = new ConcurrentHashMap();
 
     public List<Player> playerInFFA = new ArrayList<>();
-    public HashMap<Player, ArrayList<Block>> inFFA = new HashMap();
-    public HashMap<Integer, SpawnData> spawns = new HashMap();
-    public HashMap<MessageType, String> messages = new HashMap();
+    public ConcurrentHashMap<Player, ArrayList<Block>> inFFA = new ConcurrentHashMap();
+    public ConcurrentHashMap<Integer, SpawnData> spawns = new ConcurrentHashMap();
+    public ConcurrentHashMap<MessageType, String> messages = new ConcurrentHashMap();
 
     /**
      * Needed classes
@@ -102,7 +98,6 @@ public class FreeForAll extends JavaPlugin implements Listener {
             return;
         }
 
-        warmupTasks.clear();
         playerInventoryContents.clear();
         playerArmorContents.clear();
         playerCursorStore.clear();
@@ -128,6 +123,8 @@ public class FreeForAll extends JavaPlugin implements Listener {
         spawnman.loadSpawns();
 
         ffaregion = this.rus.getFFARegion();
+
+        new WarmupTask().runTaskAsynchronously(plugin);
 
         if (!this.setupEconomy()) {
             this.log("No economy plugin installed! Plugin shutting down");
@@ -222,7 +219,8 @@ public class FreeForAll extends JavaPlugin implements Listener {
      * Shuts down the plugin
      */
     public void shutdown() {
-        Bukkit.getServer().getPluginManager().disablePlugin(this);
+        plugin.getServer().getPluginManager().disablePlugin(this);
+        plugin.getServer().getScheduler().cancelTasks(this);
     }
 
     /**
