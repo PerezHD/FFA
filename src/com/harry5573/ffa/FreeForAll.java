@@ -124,7 +124,7 @@ public class FreeForAll extends JavaPlugin implements Listener {
 
         ffaregion = this.rus.getFFARegion();
 
-        getServer().getScheduler().runTaskTimerAsynchronously(plugin, new WarmupTask(), 20L, 20L);
+        getServer().getScheduler().runTaskTimer(plugin, new WarmupTask(), 20L, 20L);
 
         if (!this.setupEconomy()) {
             this.log("No economy plugin installed! Plugin shutting down");
