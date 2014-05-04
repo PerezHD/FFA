@@ -34,25 +34,19 @@ public class WarmupTask extends BukkitRunnable {
     @Override
     public void run() {
 
-        while (true) {
-
-            for (Entry<Player, Integer> next : warmupPlayers.entrySet()) {
-                int time = next.getValue();
-                Player player = next.getKey();
-                if (time > 0) {
-                    player.sendMessage(plugin.messageman.getPrefix() + " " + plugin.messages.get(MessageType.WARMUP).replaceAll("TIME", String.valueOf(time)));
-                    warmupPlayers.replace(player, time, time - 1);
-                    return;
-                }
-
-                if (time <= 0) {
-                    plugin.pmanager.joinFFAAfterTimer(player);
-                    warmupPlayers.remove(player);
-                }
+        for (Entry<Player, Integer> next : warmupPlayers.entrySet()) {
+            int time = next.getValue();
+            Player player = next.getKey();
+            if (time > 0) {
+                player.sendMessage(plugin.messageman.getPrefix() + " " + plugin.messages.get(MessageType.WARMUP).replaceAll("TIME", String.valueOf(time)));
+                warmupPlayers.remove(player);
+                warmupPlayers.put(player, (time - 1));
+                return;
             }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
+
+            if (time <= 0) {
+                plugin.pmanager.joinFFAAfterTimer(player);
+                warmupPlayers.remove(player);
             }
         }
     }
