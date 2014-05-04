@@ -41,7 +41,7 @@ public class WarmupTask extends BukkitRunnable {
                 Player player = next.getKey();
                 if (time > 0) {
                     player.sendMessage(plugin.messageman.getPrefix() + " " + plugin.messages.get(MessageType.WARMUP).replaceAll("TIME", String.valueOf(time)));
-                    time--;
+                    warmupPlayers.replace(player, time, time - 1);
                     return;
                 }
 
