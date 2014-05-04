@@ -48,16 +48,16 @@ public class FreeForAll extends JavaPlugin implements Listener {
     /**
      * Player storage
      */
-    public ConcurrentHashMap<Player, ItemStack[]> playerInventoryContents = new ConcurrentHashMap();
-    public ConcurrentHashMap<Player, ItemStack[]> playerArmorContents = new ConcurrentHashMap();
-    public ConcurrentHashMap<Player, ItemStack> playerCursorStore = new ConcurrentHashMap();
-    public ConcurrentHashMap<Player, Integer> playerKillstreak = new ConcurrentHashMap();
-    public ConcurrentHashMap<Player, Float> playerExp = new ConcurrentHashMap();
+    public static ConcurrentHashMap<Player, ItemStack[]> playerInventoryContents = new ConcurrentHashMap();
+    public static ConcurrentHashMap<Player, ItemStack[]> playerArmorContents = new ConcurrentHashMap();
+    public static ConcurrentHashMap<Player, ItemStack> playerCursorStore = new ConcurrentHashMap();
+    public static ConcurrentHashMap<Player, Integer> playerKillstreak = new ConcurrentHashMap();
+    public static ConcurrentHashMap<Player, Float> playerExp = new ConcurrentHashMap();
 
     public List<Player> playerInFFA = new ArrayList<>();
-    public ConcurrentHashMap<Player, ArrayList<Block>> inFFA = new ConcurrentHashMap();
-    public ConcurrentHashMap<Integer, SpawnData> spawns = new ConcurrentHashMap();
-    public ConcurrentHashMap<MessageType, String> messages = new ConcurrentHashMap();
+    public static ConcurrentHashMap<Player, ArrayList<Block>> inFFA = new ConcurrentHashMap();
+    public static ConcurrentHashMap<Integer, SpawnData> spawns = new ConcurrentHashMap();
+    public static ConcurrentHashMap<MessageType, String> messages = new ConcurrentHashMap();
 
     /**
      * Needed classes
