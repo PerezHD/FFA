@@ -259,7 +259,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onChange(PlayersInFFAChangeEvent e) {
-        for (Player inFFA : FreeForAll.playerKillstreak.keySet()) {
+        for (Player inFFA : plugin.playerKillstreak.keySet()) {
             plugin.pmanager.updateScoreboard(inFFA);
         }
     }

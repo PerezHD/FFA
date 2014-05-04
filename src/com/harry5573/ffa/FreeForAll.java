@@ -7,7 +7,9 @@ import com.harry5573.ffa.command.CommandRemoveSpawn;
 import com.harry5573.ffa.command.CommandSetSpawn;
 import com.harry5573.ffa.command.CommandEnable;
 import com.harry5573.ffa.command.FFACommandHandler;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -30,10 +32,13 @@ import com.harry5573.ffa.managers.RewardsManager;
 import com.harry5573.ffa.utilitys.SpawnData;
 import com.harry5573.ffa.managers.SpawnManager;
 import com.harry5573.ffa.task.WarmupTask;
+
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class FreeForAll extends JavaPlugin implements Listener {
@@ -48,16 +53,16 @@ public class FreeForAll extends JavaPlugin implements Listener {
     /**
      * Player storage
      */
-    public static ConcurrentHashMap<Player, ItemStack[]> playerInventoryContents = new ConcurrentHashMap();
-    public static ConcurrentHashMap<Player, ItemStack[]> playerArmorContents = new ConcurrentHashMap();
-    public static ConcurrentHashMap<Player, ItemStack> playerCursorStore = new ConcurrentHashMap();
-    public static ConcurrentHashMap<Player, Integer> playerKillstreak = new ConcurrentHashMap();
-    public static ConcurrentHashMap<Player, Float> playerExp = new ConcurrentHashMap();
+    public HashMap<Player, ItemStack[]> playerInventoryContents = new HashMap();
+    public HashMap<Player, ItemStack[]> playerArmorContents = new HashMap();
+    public HashMap<Player, ItemStack> playerCursorStore = new HashMap();
+    public HashMap<Player, Integer> playerKillstreak = new HashMap();
+    public HashMap<Player, Float> playerExp = new HashMap();
 
     public List<Player> playerInFFA = new ArrayList<>();
-    public static ConcurrentHashMap<Player, ArrayList<Block>> inFFA = new ConcurrentHashMap();
-    public static ConcurrentHashMap<Integer, SpawnData> spawns = new ConcurrentHashMap();
-    public static ConcurrentHashMap<MessageType, String> messages = new ConcurrentHashMap();
+    public HashMap<Player, ArrayList<Block>> inFFA = new HashMap();
+    public HashMap<Integer, SpawnData> spawns = new HashMap();
+    public HashMap<MessageType, String> messages = new HashMap();
 
     /**
      * Needed classes
